@@ -1,0 +1,107 @@
+============================================================
+  GOOGLE SHEETS SETUP GUIDE — Teacher Janice ESL Website
+============================================================
+
+Your website already sends bookings and inquiries to your
+Gmail via email. This guide adds Google Sheets logging so
+every booking and inquiry is also saved to a spreadsheet.
+
+============================================================
+  STEP 1: Create a Google Sheet
+============================================================
+
+1. Go to https://sheets.google.com
+2. Click "+ Blank spreadsheet"
+3. Name it: "ESL Bookings & Inquiries"
+   (You can name it anything you like)
+
+============================================================
+  STEP 2: Open Apps Script
+============================================================
+
+1. In your new Google Sheet, click:
+   Extensions  >  Apps Script
+2. This opens a code editor in a new tab
+
+============================================================
+  STEP 3: Paste the Script
+============================================================
+
+1. Delete everything in the code editor
+2. Open the file "google-apps-script.js" from your website
+   folder (in a text editor like Notepad)
+3. Copy ALL the code from that file
+4. Paste it into the Apps Script editor
+5. Click the Save icon (or Ctrl+S / Cmd+S)
+
+============================================================
+  STEP 4: Deploy as Web App
+============================================================
+
+1. Click the blue "Deploy" button (top right)
+2. Select "New deployment"
+3. Click the gear icon next to "Select type"
+4. Choose "Web app"
+5. Fill in:
+   - Description: "ESL Form Handler"
+   - Execute as: "Me"
+   - Who has access: "Anyone"
+6. Click "Deploy"
+7. Click "Authorize access" when prompted
+   - Choose your Google account
+   - If you see "Google hasn't verified this app", click
+     "Advanced" then "Go to ESL Form Handler (unsafe)"
+   - Click "Allow"
+8. You will see a "Web app URL" — COPY THIS URL!
+   It looks like: https://script.google.com/macros/s/ABC123.../exec
+
+============================================================
+  STEP 5: Add the URL to Your Website
+============================================================
+
+1. Open "script.js" from your website folder
+2. Near the top, find this line:
+
+   const GOOGLE_SHEETS_URL = '';
+
+3. Paste your URL between the quotes:
+
+   const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/ABC123.../exec';
+
+4. Save the file
+
+============================================================
+  DONE! Here's What Happens Now
+============================================================
+
+When a student submits a booking or inquiry:
+
+  1. Data is saved to your Google Sheet automatically
+     - Bookings go to a "Bookings" tab
+     - Contact inquiries go to an "Inquiries" tab
+     (Both tabs are created automatically on first use)
+
+  2. You also get an email notification (via FormSubmit)
+
+So you get BOTH: organized spreadsheet + email alerts!
+
+============================================================
+  TIPS
+============================================================
+
+- The Google Sheet auto-creates column headers the first
+  time a form is submitted.
+
+- If you ever need to update the script, go back to your
+  Google Sheet > Extensions > Apps Script, make changes,
+  then Deploy > Manage Deployments > Edit (pencil icon) >
+  choose "New version" > Deploy.
+
+- Your existing email notifications via FormSubmit will
+  continue to work exactly as before.
+
+- If you haven't set up Google Sheets yet, that's OK!
+  The website still works — bookings just go to email only.
+  You can set up Sheets anytime later.
+
+============================================================

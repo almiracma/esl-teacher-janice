@@ -692,6 +692,49 @@ img {
   margin-top: 32px;
 }
 
+.policy-box {
+  max-width: 640px;
+  margin: 32px auto 0;
+  padding: 24px 28px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  text-align: left;
+}
+
+.policy-box h4 {
+  font-size: 0.95rem;
+  color: var(--navy);
+  margin-bottom: 12px;
+}
+
+.policy-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.policy-box li {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  line-height: 1.6;
+  padding-left: 20px;
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.policy-box li:last-child {
+  margin-bottom: 0;
+}
+
+.policy-box li::before {
+  content: '•';
+  position: absolute;
+  left: 4px;
+  color: var(--teal);
+  font-weight: 700;
+}
+
 /* ===== Checkbox Grid (Lesson Focus) ===== */
 .checkbox-grid {
   display: grid;

@@ -611,37 +611,37 @@ img {
   font-weight: 600;
 }
 
-.pricing-payment {
-  text-align: center;
-  margin-top: 48px;
-  padding: 40px 24px;
-  background: var(--gray-50);
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--gray-200);
+.pay-buttons {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.pricing-payment h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.5rem;
-  margin-bottom: 12px;
+.btn-pay {
+  padding: 10px 16px;
+  font-size: 0.85rem;
+  border-radius: 50px;
+  font-weight: 600;
 }
 
-.pricing-payment > p {
-  color: var(--gray-500);
-  font-size: 1rem;
-  max-width: 500px;
-  margin: 0 auto 24px;
+.btn-pay-package {
+  background: var(--teal-light);
+  border-color: var(--teal);
+  color: var(--teal-dark);
 }
 
-.pricing-payment .btn-lg {
-  margin-bottom: 16px;
+.btn-pay-package:hover {
+  background: var(--teal);
+  color: var(--white);
+  border-color: var(--teal);
 }
 
 .pricing-note {
   text-align: center;
   font-size: 0.9rem;
   color: var(--gray-500);
-  margin-top: 0;
+  margin-top: 32px;
 }
 
 /* ===== Checkbox Grid (Lesson Focus) ===== */

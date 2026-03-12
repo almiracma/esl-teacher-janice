@@ -118,16 +118,6 @@ document.querySelectorAll('.course-select').forEach(function(select) {
   });
 });
 
-// ===== Calendly Booking Redirect =====
-// Listen for Calendly's event_scheduled message so we can redirect
-// from our own page — this skips Calendly's "You are leaving" warning.
-window.addEventListener('message', function(e) {
-  if (e.data.event && e.data.event === 'calendly.event_scheduled') {
-    // Redirect to our thank-you page
-    window.location.href = '/thank-you-trial.html';
-  }
-});
-
 // ===== Contact Form Handling =====
 const contactForm = document.getElementById('contactForm');
 

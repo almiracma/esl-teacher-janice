@@ -1134,25 +1134,6 @@ img {
   padding: 100px 0;
 }
 
-/* Calendly Embed */
-.calendly-embed-wrap {
-  margin-bottom: 56px;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-  background: var(--white);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--gray-200);
-  overflow: hidden;
-  padding-bottom: 16px;
-}
-
-.calendly-embed-wrap .cta-hint {
-  color: var(--gray-500);
-  text-align: center;
-}
-
 /* Primary CTA Card */
 .contact-cta {
   margin-bottom: 56px;

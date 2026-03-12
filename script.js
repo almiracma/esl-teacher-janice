@@ -105,14 +105,16 @@ document.querySelectorAll('.course-select').forEach(function(select) {
     card.querySelector('.price-amount').textContent = '$' + course.price;
     // Update package deal
     card.querySelector('.pkg-price').textContent = '$' + course.pkg;
-    // Update pay 1 lesson button
-    var pay1 = card.querySelector('.pay1');
-    pay1.href = course.pay1;
-    pay1.textContent = 'Pay 1 Lesson \u2014 $' + course.price;
-    // Update pay 10 lessons button
-    var pay10 = card.querySelector('.pay10');
-    pay10.href = course.pay10;
-    pay10.innerHTML = 'Pay 10 Lessons \u2014 <s>$' + course.orig + '</s> $' + course.pkg;
+    // Update pay 1 lesson form
+    var pay1Form = card.querySelector('.pay1-form');
+    pay1Form.querySelector('[name="amount"]').value = course.price + '.00';
+    pay1Form.querySelector('[name="item_name"]').value = course.item1;
+    pay1Form.querySelector('button').textContent = 'Pay 1 Lesson \u2014 $' + course.price;
+    // Update pay 10 lessons form
+    var pay10Form = card.querySelector('.pay10-form');
+    pay10Form.querySelector('[name="amount"]').value = course.pkg + '.00';
+    pay10Form.querySelector('[name="item_name"]').value = course.item10;
+    pay10Form.querySelector('button').innerHTML = 'Pay 10 Lessons \u2014 <s>$' + course.orig + '</s> $' + course.pkg;
   });
 });
 

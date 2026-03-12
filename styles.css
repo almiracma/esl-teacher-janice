@@ -656,6 +656,10 @@ img {
   gap: 8px;
 }
 
+.pay-buttons form {
+  width: 100%;
+}
+
 .btn-pay {
   padding: 10px 16px;
   font-size: 0.85rem;

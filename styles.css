@@ -403,7 +403,7 @@ img {
 
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
 
@@ -484,9 +484,10 @@ img {
 
 .pricing-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   margin-bottom: 32px;
+  align-items: start;
 }
 
 .pricing-card {
@@ -594,6 +595,30 @@ img {
   left: 0;
   color: var(--teal);
   font-weight: 700;
+}
+
+.age-tag {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--gray-500);
+  font-family: 'Inter', sans-serif;
+}
+
+.course-tier-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--navy);
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 4px;
+  padding-top: 16px;
+  border-top: 1px solid var(--gray-200);
+}
+
+.course-tier-label:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
 }
 
 .package-deal {
@@ -1378,7 +1403,13 @@ img {
   }
 
   .pricing-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin: 0 auto 32px;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
   }
 
   .testimonials-grid {
@@ -1463,7 +1494,7 @@ img {
 
   .pricing-grid {
     grid-template-columns: 1fr;
-    max-width: 400px;
+    max-width: 480px;
     margin: 0 auto 32px;
   }
 

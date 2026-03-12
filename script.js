@@ -292,14 +292,91 @@ document.querySelectorAll('.services-grid, .pricing-grid, .testimonials-grid, .a
 
 // ===== Auto-fill Timezone Fields =====
 const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-const timezoneField = document.getElementById('timezone');
-if (timezoneField) {
-  timezoneField.value = userTimezone;
-}
 const bookingTimezoneField = document.getElementById('bookingTimezone');
 if (bookingTimezoneField) {
   bookingTimezoneField.value = userTimezone;
 }
+
+// ===== Timezone Autocomplete Dropdown =====
+(function() {
+  const tzData = [
+    { value: 'Asia/Manila', label: 'Philippines', utc: 'UTC+8' },
+    { value: 'Asia/Tokyo', label: 'Japan', utc: 'UTC+9' },
+    { value: 'Asia/Seoul', label: 'South Korea', utc: 'UTC+9' },
+    { value: 'Asia/Shanghai', label: 'China', utc: 'UTC+8' },
+    { value: 'Asia/Taipei', label: 'Taiwan', utc: 'UTC+8' },
+    { value: 'Asia/Ho_Chi_Minh', label: 'Vietnam', utc: 'UTC+7' },
+    { value: 'Asia/Bangkok', label: 'Thailand', utc: 'UTC+7' },
+    { value: 'Asia/Jakarta', label: 'Indonesia', utc: 'UTC+7' },
+    { value: 'Asia/Kolkata', label: 'India', utc: 'UTC+5:30' },
+    { value: 'Asia/Riyadh', label: 'Saudi Arabia', utc: 'UTC+3' },
+    { value: 'Asia/Dubai', label: 'UAE', utc: 'UTC+4' },
+    { value: 'Europe/Istanbul', label: 'Turkey', utc: 'UTC+3' },
+    { value: 'Europe/Moscow', label: 'Russia - Moscow', utc: 'UTC+3' },
+    { value: 'America/Sao_Paulo', label: 'Brazil', utc: 'UTC-3' },
+    { value: 'America/Bogota', label: 'Colombia', utc: 'UTC-5' },
+    { value: 'America/Mexico_City', label: 'Mexico', utc: 'UTC-6' },
+    { value: 'America/New_York', label: 'US - Eastern', utc: 'UTC-5' },
+    { value: 'America/Chicago', label: 'US - Central', utc: 'UTC-6' },
+    { value: 'America/Los_Angeles', label: 'US - Pacific', utc: 'UTC-8' },
+    { value: 'Europe/London', label: 'UK', utc: 'UTC+0' },
+    { value: 'Europe/Paris', label: 'Europe - Central', utc: 'UTC+1' },
+    { value: 'Australia/Sydney', label: 'Australia - Sydney', utc: 'UTC+11' }
+  ];
+
+  const input = document.getElementById('timezone');
+  const dropdown = document.getElementById('tzDropdown');
+  if (!input || !dropdown) return;
+
+  // Auto-fill with detected timezone
+  input.value = userTimezone;
+
+  function renderOptions(filter) {
+    var query = (filter || '').toLowerCase();
+    var html = '';
+    tzData.forEach(function(tz) {
+      var match = tz.value.toLowerCase().indexOf(query) !== -1 ||
+                  tz.label.toLowerCase().indexOf(query) !== -1 ||
+                  tz.utc.toLowerCase().indexOf(query) !== -1;
+      if (!filter || match) {
+        html += '<div class="tz-option" data-value="' + tz.value + '">' +
+                '<span class="tz-label">' + tz.label + '</span>' +
+                '<span class="tz-utc">(' + tz.utc + ')</span>' +
+                '</div>';
+      }
+    });
+    dropdown.innerHTML = html || '<div class="tz-option" style="color:var(--gray-400)">No matches</div>';
+  }
+
+  function openDropdown() {
+    renderOptions(input.value === userTimezone ? '' : input.value);
+    dropdown.classList.add('open');
+  }
+
+  function closeDropdown() {
+    dropdown.classList.remove('open');
+  }
+
+  input.addEventListener('focus', openDropdown);
+  input.addEventListener('input', function() {
+    renderOptions(this.value);
+    dropdown.classList.add('open');
+  });
+
+  dropdown.addEventListener('click', function(e) {
+    var option = e.target.closest('.tz-option');
+    if (option && option.dataset.value) {
+      input.value = option.dataset.value;
+      closeDropdown();
+    }
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.tz-wrapper')) {
+      closeDropdown();
+    }
+  });
+})();
 
 // ===== Contact Form Handling =====
 const contactForm = document.getElementById('contactForm');

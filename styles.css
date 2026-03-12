@@ -671,6 +671,55 @@ img {
   }
 }
 
+/* ===== Timezone Autocomplete Dropdown ===== */
+.tz-wrapper {
+  position: relative;
+}
+
+.tz-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-top: none;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 50;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.tz-dropdown.open {
+  display: block;
+}
+
+.tz-option {
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--gray-700);
+  transition: background 0.15s ease;
+}
+
+.tz-option:hover,
+.tz-option.active {
+  background: var(--teal-light);
+  color: var(--teal-dark);
+}
+
+.tz-option .tz-label {
+  font-weight: 500;
+}
+
+.tz-option .tz-utc {
+  color: var(--gray-500);
+  font-size: 0.8rem;
+  margin-left: 6px;
+}
+
 /* ===== Schedule & Booking ===== */
 .schedule {
   padding: 100px 0;

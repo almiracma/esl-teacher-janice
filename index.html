@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teacher Janice | Professional ESL Tutor</title>
   <meta name="description" content="Learn English online with Teacher Janice — 13+ years of ESL teaching experience. IELTS, TOEFL, Business English, Kids & Adult classes.">
-  <link rel="stylesheet" href="styles.css?v=13">
+  <link rel="stylesheet" href="styles.css?v=14">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -365,49 +365,55 @@
         </div>
       </div>
 
-      <!-- Simple Message Form + Info -->
-      <div class="contact-bottom">
-        <div class="contact-form-simple">
-          <h3>Have a Question?</h3>
-          <p>Send me a message and I'll get back to you within 24 hours.</p>
-          <form id="contactForm" action="https://formsubmit.co/eslteacherjanice@gmail.com" method="POST">
-            <input type="hidden" name="_subject" value="New Inquiry - Teacher Janice ESL">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_next" value="">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="name">Your Name *</label>
-                <input type="text" id="name" name="name" required placeholder="Your name">
-              </div>
-              <div class="form-group">
-                <label for="email">Your Email *</label>
-                <input type="email" id="email" name="email" required placeholder="your@email.com">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="message">Message *</label>
-              <textarea id="message" name="message" rows="4" required placeholder="Tell me about your learning goals or ask any questions..."></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary btn-full">Send Message</button>
-          </form>
-        </div>
-        <div class="contact-sidebar">
-          <div class="info-card">
-            <div class="info-icon">&#127760;</div>
-            <h4>Lessons Via Zoom</h4>
-            <p>All lessons are online. You'll receive a Zoom link after booking.</p>
+      <!-- Quick Info Strip -->
+      <div class="info-strip">
+        <div class="info-strip-item">
+          <span class="info-strip-icon">&#127760;</span>
+          <div>
+            <strong>Lessons Via Zoom</strong>
+            <p>You'll receive a Zoom link after booking.</p>
           </div>
-          <div class="info-card">
-            <div class="info-icon">&#9200;</div>
-            <h4>Response Time</h4>
+        </div>
+        <div class="info-strip-item">
+          <span class="info-strip-icon">&#9200;</span>
+          <div>
+            <strong>Response Time</strong>
             <p>I reply to all messages within 24 hours.</p>
           </div>
-          <div class="info-card info-card-subtle">
-            <div class="info-icon">&#127891;</div>
-            <h4>Existing Students</h4>
-            <p>Check your email for your personal Google Classroom invite to access materials and track progress.</p>
+        </div>
+        <div class="info-strip-item">
+          <span class="info-strip-icon">&#127891;</span>
+          <div>
+            <strong>Existing Students</strong>
+            <p>Check your email for your Google Classroom invite.</p>
           </div>
         </div>
+      </div>
+
+      <!-- Message Form -->
+      <div class="contact-form-centered">
+        <h3>Have a Question?</h3>
+        <p>Send me a message and I'll get back to you within 24 hours.</p>
+        <form id="contactForm" action="https://formsubmit.co/eslteacherjanice@gmail.com" method="POST">
+          <input type="hidden" name="_subject" value="New Inquiry - Teacher Janice ESL">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_next" value="">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Your Name *</label>
+              <input type="text" id="name" name="name" required placeholder="Your name">
+            </div>
+            <div class="form-group">
+              <label for="email">Your Email *</label>
+              <input type="email" id="email" name="email" required placeholder="your@email.com">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="message">Message *</label>
+            <textarea id="message" name="message" rows="4" required placeholder="Tell me about your learning goals or ask any questions..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Send Message</button>
+        </form>
       </div>
     </div>
   </section>

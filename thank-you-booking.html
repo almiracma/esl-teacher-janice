@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson Booked — Teacher Janice ESL</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="styles.css?v=17">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    .thankyou {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      background: var(--gray-50);
+    }
+    .thankyou-card {
+      max-width: 560px;
+      width: 100%;
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      padding: 48px 40px;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--gray-200);
+    }
+    .thankyou-icon {
+      font-size: 3.5rem;
+      margin-bottom: 16px;
+    }
+    .thankyou-card h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+    .thankyou-card .subtitle {
+      color: var(--gray-500);
+      font-size: 1rem;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .thankyou-step {
+      text-align: left;
+      padding: 20px 24px;
+      background: var(--gray-50);
+      border-radius: var(--radius-md);
+      margin-bottom: 16px;
+      border: 1px solid var(--gray-200);
+    }
+    .thankyou-step .step-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--teal);
+      margin-bottom: 6px;
+    }
+    .thankyou-step h3 {
+      font-size: 1rem;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .thankyou-step p {
+      font-size: 0.9rem;
+      color: var(--gray-500);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .thankyou-cta {
+      margin-top: 28px;
+    }
+    .thankyou-cta .btn {
+      font-size: 1.05rem;
+      padding: 16px 36px;
+    }
+    .thankyou-footer {
+      margin-top: 28px;
+      font-size: 0.85rem;
+      color: var(--gray-500);
+      line-height: 1.6;
+    }
+    .thankyou-home {
+      display: inline-block;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: var(--teal);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .thankyou-home:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="thankyou">
+    <div class="thankyou-card">
+      <div class="thankyou-icon">&#9989;</div>
+      <h1>Lesson Booked!</h1>
+      <p class="subtitle">You're all set<span id="nameGreeting"></span>! Here's what to expect:</p>
+      <p id="lessonTime" style="display:none; background: var(--teal); color: white; padding: 12px 20px; border-radius: var(--radius-md); font-weight: 600; font-size: 0.95rem; margin-bottom: 24px;"></p>
+
+      <div class="thankyou-step">
+        <div class="step-label">Step 1</div>
+        <h3>Check Your Email</h3>
+        <p>You'll receive a Calendly confirmation email<span id="emailNote"></span> with the Zoom link for our lesson. Make sure to check your spam folder just in case.</p>
+      </div>
+
+      <div class="thankyou-step">
+        <div class="step-label">Step 2</div>
+        <h3>Join on Zoom</h3>
+        <p>At your scheduled time, click the Zoom link in your confirmation email. I'll be there ready to start our 25-minute lesson!</p>
+      </div>
+
+      <div class="thankyou-step">
+        <div class="step-label">Step 3</div>
+        <h3>Google Classroom</h3>
+        <p>Check your email for a Google Classroom invite where you'll find lesson materials, homework, and progress tracking.</p>
+      </div>
+
+      <div class="thankyou-cta">
+        <a href="https://calendly.com/eslteacherjanice/regular-lesson-25mins" target="_blank" rel="noopener" class="btn btn-primary">Book Another Lesson</a>
+      </div>
+
+      <p class="thankyou-footer">
+        Need to reschedule? You can do so through Calendly at least 24 hours in advance.
+        <br>Questions? Email me at <a href="mailto:eslteacherjanice@gmail.com" style="color: var(--teal);">eslteacherjanice@gmail.com</a>
+      </p>
+
+      <a href="/" class="thankyou-home">&larr; Back to eslwithjanice.com</a>
+    </div>
+  </div>
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var name = params.get('invitee_full_name');
+      var email = params.get('invitee_email');
+      var startTime = params.get('event_start_time');
+
+      // Personalize greeting with student's first name
+      if (name) {
+        var firstName = name.split(' ')[0];
+        document.getElementById('nameGreeting').textContent = ', ' + firstName;
+      }
+
+      // Show which email to check
+      if (email) {
+        document.getElementById('emailNote').textContent = ' at ' + email;
+      }
+
+      // Show the scheduled lesson date & time
+      if (startTime) {
+        var date = new Date(startTime);
+        var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' };
+        var formatted = date.toLocaleDateString(undefined, options);
+        var el = document.getElementById('lessonTime');
+        el.textContent = 'Your lesson is on ' + formatted;
+        el.style.display = 'block';
+      }
+    })();
+  </script>
+</body>
+</html>

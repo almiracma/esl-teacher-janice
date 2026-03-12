@@ -1114,6 +1114,18 @@ img {
   color: var(--gray-500);
 }
 
+.info-card-action {
+  background: var(--white);
+  border: 2px solid var(--teal-light);
+}
+
+.info-card-action .btn-sm {
+  margin-top: 12px;
+  padding: 10px 24px;
+  font-size: 0.85rem;
+  display: inline-block;
+}
+
 /* ===== Footer ===== */
 .footer {
   background: var(--navy);

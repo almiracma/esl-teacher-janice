@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teacher Janice | Professional ESL Tutor</title>
   <meta name="description" content="Learn English online with Teacher Janice — 13+ years of ESL teaching experience. IELTS, TOEFL, Business English, Kids & Adult classes.">
-  <link rel="stylesheet" href="styles.css?v=17">
+  <link rel="stylesheet" href="styles.css?v=18">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
 </head>
 <body>
 
@@ -24,7 +25,7 @@
         <li><a href="#services">Services</a></li>
         <li><a href="#pricing">Pricing</a></li>
         <li><a href="#testimonials">Testimonials</a></li>
-        <li><a href="https://calendly.com/eslteacherjanice/esl-trial-lesson" target="_blank" rel="noopener" class="btn btn-nav">Book a Free Trial</a></li>
+        <li><a href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/eslteacherjanice/esl-trial-lesson?hide_gdpr_banner=1'});return false;" class="btn btn-nav">Book a Free Trial</a></li>
       </ul>
     </div>
   </nav>
@@ -37,7 +38,7 @@
         <h1>Learn English with <span class="highlight">Teacher Janice</span></h1>
         <p class="hero-description">Professional ESL tutor with international teaching experience across the Philippines, Saudi Arabia, and Thailand. From everyday conversation to IELTS mastery — I'll help you achieve your English goals.</p>
         <div class="hero-buttons">
-          <a href="https://calendly.com/eslteacherjanice/esl-trial-lesson" target="_blank" rel="noopener" class="btn btn-primary">Book a Free Trial Lesson</a>
+          <a href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/eslteacherjanice/esl-trial-lesson?hide_gdpr_banner=1'});return false;" class="btn btn-primary">Book a Free Trial Lesson</a>
           <a href="#services" class="btn btn-outline">Explore Courses</a>
         </div>
         <div class="hero-stats">
@@ -192,7 +193,7 @@
               <li>Games & activities included</li>
             </ul>
             <p class="package-deal">10-Class Package: <strong>$108</strong> <span class="save-tag">Save 10%</span></p>
-            <a href="https://calendly.com/eslteacherjanice/esl-trial-lesson" target="_blank" rel="noopener" class="btn btn-primary btn-full">Book a Free Trial</a>
+            <a href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/eslteacherjanice/esl-trial-lesson?hide_gdpr_banner=1'});return false;" class="btn btn-primary btn-full">Book a Free Trial</a>
             <div class="pay-buttons">
               <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
                 <input type="hidden" name="cmd" value="_xclick">
@@ -246,7 +247,7 @@
               <li>Materials included</li>
             </ul>
             <p class="package-deal">10-Class Package: <strong class="pkg-price">$90</strong> <span class="save-tag">Save 10%</span></p>
-            <a href="https://calendly.com/eslteacherjanice/esl-trial-lesson" target="_blank" rel="noopener" class="btn btn-primary btn-full">Book a Free Trial</a>
+            <a href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/eslteacherjanice/esl-trial-lesson?hide_gdpr_banner=1'});return false;" class="btn btn-primary btn-full">Book a Free Trial</a>
             <div class="pay-buttons">
               <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" class="pay1-form">
                 <input type="hidden" name="cmd" value="_xclick">
@@ -301,7 +302,7 @@
               <li>Materials included</li>
             </ul>
             <p class="package-deal">10-Class Package: <strong class="pkg-price">$90</strong> <span class="save-tag">Save 10%</span></p>
-            <a href="https://calendly.com/eslteacherjanice/esl-trial-lesson" target="_blank" rel="noopener" class="btn btn-primary btn-full">Book a Free Trial</a>
+            <a href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/eslteacherjanice/esl-trial-lesson?hide_gdpr_banner=1'});return false;" class="btn btn-primary btn-full">Book a Free Trial</a>
             <div class="pay-buttons">
               <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" class="pay1-form">
                 <input type="hidden" name="cmd" value="_xclick">
@@ -387,15 +388,10 @@
         <p class="section-subtitle">Book a <strong>free 15-minute trial lesson</strong> to see if we're a good fit. No payment required for the trial!</p>
       </div>
 
-      <!-- Primary CTA: Book a Trial -->
-      <div class="contact-cta">
-        <div class="cta-card">
-          <div class="cta-icon">&#128197;</div>
-          <h3>Book Your Free Trial Lesson</h3>
-          <p>Choose a time that works for you. I'll handle the rest — you'll get a confirmation email with your Zoom link.</p>
-          <a href="https://calendly.com/eslteacherjanice/esl-trial-lesson" target="_blank" rel="noopener" class="btn btn-primary btn-lg">Book a Free Trial</a>
-          <p class="cta-hint">Free &bull; 15 minutes &bull; Via Zoom &bull; No commitment</p>
-        </div>
+      <!-- Embedded Calendly: Book a Trial -->
+      <div class="calendly-embed-wrap">
+        <div class="calendly-inline-widget" data-url="https://calendly.com/eslteacherjanice/esl-trial-lesson?hide_gdpr_banner=1" style="min-width:320px;height:700px;"></div>
+        <p class="cta-hint">Free &bull; 15 minutes &bull; Via Zoom &bull; No commitment</p>
       </div>
 
       <!-- How It Works -->
@@ -487,6 +483,7 @@
     </div>
   </footer>
 
+  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
   <script src="script.js?v=7"></script>
 </body>
 </html>

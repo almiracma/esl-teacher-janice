@@ -1190,27 +1190,6 @@ img {
   line-height: 1.5;
 }
 
-/* Contact Details */
-.contact-details {
-  list-style: none;
-  max-width: 640px;
-  margin: 0 auto 36px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.contact-details li {
-  font-size: 0.9rem;
-  color: var(--gray-500);
-  text-align: center;
-  line-height: 1.5;
-}
-
-.contact-details li strong {
-  color: var(--navy);
-}
-
 /* Contact Form Centered */
 .contact-form-centered {
   max-width: 640px;

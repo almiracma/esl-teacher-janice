@@ -1190,42 +1190,25 @@ img {
   line-height: 1.5;
 }
 
-/* Info Strip */
-.info-strip {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  margin-bottom: 48px;
-}
-
-.info-strip-item {
+/* Contact Details */
+.contact-details {
+  list-style: none;
+  max-width: 640px;
+  margin: 0 auto 36px;
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 20px;
-  background: var(--gray-50);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--gray-200);
+  flex-direction: column;
+  gap: 10px;
 }
 
-.info-strip-icon {
-  font-size: 1.5rem;
-  flex-shrink: 0;
-  line-height: 1;
-}
-
-.info-strip-item strong {
-  display: block;
+.contact-details li {
   font-size: 0.9rem;
-  color: var(--navy);
-  margin-bottom: 4px;
+  color: var(--gray-500);
+  text-align: center;
+  line-height: 1.5;
 }
 
-.info-strip-item p {
-  font-size: 0.85rem;
-  color: var(--gray-500);
-  margin: 0;
-  line-height: 1.4;
+.contact-details li strong {
+  color: var(--navy);
 }
 
 /* Contact Form Centered */
@@ -1413,12 +1396,6 @@ img {
     grid-template-columns: 1fr;
     max-width: 600px;
     margin: 0 auto;
-  }
-
-  .info-strip {
-    grid-template-columns: 1fr;
-    max-width: 480px;
-    margin: 0 auto 48px;
   }
 
   .steps-grid {

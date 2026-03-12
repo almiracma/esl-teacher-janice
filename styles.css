@@ -1016,19 +1016,134 @@ img {
   padding: 100px 0;
 }
 
-.contact-content {
+/* Primary CTA Card */
+.contact-cta {
+  margin-bottom: 56px;
+}
+
+.cta-card {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  color: var(--white);
+  text-align: center;
+  padding: 48px 36px;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+}
+
+.cta-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.cta-card h3 {
+  color: var(--white);
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  margin-bottom: 12px;
+}
+
+.cta-card p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.05rem;
+  max-width: 500px;
+  margin: 0 auto 24px;
+}
+
+.btn-lg {
+  padding: 18px 48px;
+  font-size: 1.1rem;
+}
+
+.cta-hint {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  margin-top: 16px;
+}
+
+/* How It Works */
+.how-it-works {
+  margin-bottom: 56px;
+}
+
+.how-it-works h3 {
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  margin-bottom: 32px;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.step-card {
+  text-align: center;
+  padding: 28px 20px;
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.step-card:hover {
+  border-color: var(--teal);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.step-number {
+  width: 44px;
+  height: 44px;
+  background: var(--teal);
+  color: var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 auto 16px;
+}
+
+.step-card h4 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.step-card p {
+  font-size: 0.9rem;
+  color: var(--gray-500);
+  line-height: 1.5;
+}
+
+/* Contact Bottom: Form + Sidebar */
+.contact-bottom {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
-  gap: 48px;
+  gap: 36px;
   align-items: start;
 }
 
-.contact-form {
+.contact-form-simple {
   background: var(--white);
   padding: 36px;
   border-radius: var(--radius-lg);
   border: 1px solid var(--gray-200);
   box-shadow: var(--shadow-md);
+}
+
+.contact-form-simple h3 {
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+}
+
+.contact-form-simple > p {
+  color: var(--gray-500);
+  font-size: 0.95rem;
+  margin-bottom: 24px;
 }
 
 .form-row {
@@ -1076,7 +1191,8 @@ img {
   color: var(--gray-300);
 }
 
-.contact-info {
+/* Contact Sidebar */
+.contact-sidebar {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -1114,16 +1230,21 @@ img {
   color: var(--gray-500);
 }
 
-.info-card-action {
+.info-card-subtle {
   background: var(--white);
-  border: 2px solid var(--teal-light);
+  border: 1px dashed var(--gray-300);
 }
 
-.info-card-action .btn-sm {
+.info-card-subtle .btn-sm {
   margin-top: 12px;
   padding: 10px 24px;
   font-size: 0.85rem;
   display: inline-block;
+}
+
+.btn-sm {
+  padding: 10px 24px;
+  font-size: 0.85rem;
 }
 
 /* ===== Footer ===== */
@@ -1233,8 +1354,12 @@ img {
     margin: 0 auto;
   }
 
-  .contact-content {
+  .contact-bottom {
     grid-template-columns: 1fr;
+  }
+
+  .steps-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .footer-content {
@@ -1313,16 +1438,33 @@ img {
     grid-template-columns: 1fr;
   }
 
-  .contact-form {
+  .contact-form-simple {
     padding: 24px;
   }
 
-  .contact-info {
+  .cta-card {
+    padding: 36px 24px;
+  }
+
+  .cta-card h3 {
+    font-size: 1.5rem;
+  }
+
+  .steps-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .contact-bottom {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-sidebar {
     flex-direction: row;
     flex-wrap: wrap;
   }
 
-  .info-card {
+  .contact-sidebar .info-card {
     flex: 1;
     min-width: 140px;
   }
@@ -1347,7 +1489,16 @@ img {
     align-items: center;
   }
 
-  .contact-info {
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-sidebar {
     flex-direction: column;
+  }
+
+  .btn-lg {
+    padding: 16px 36px;
+    font-size: 1rem;
   }
 }

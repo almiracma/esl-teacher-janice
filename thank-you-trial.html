@@ -102,12 +102,13 @@
     <div class="thankyou-card">
       <div class="thankyou-icon">&#127881;</div>
       <h1>Trial Lesson Booked!</h1>
-      <p class="subtitle">Exciting! I can't wait to meet you. Here's what to expect:</p>
+      <p class="subtitle">Exciting! I can't wait to meet you<span id="nameGreeting"></span>. Here's what to expect:</p>
+      <p id="lessonTime" style="display:none; background: var(--teal); color: white; padding: 12px 20px; border-radius: var(--radius-md); font-weight: 600; font-size: 0.95rem; margin-bottom: 24px;"></p>
 
       <div class="thankyou-step">
         <div class="step-label">Step 1</div>
         <h3>Check Your Email</h3>
-        <p>You'll receive a Calendly confirmation email with the Zoom link for our lesson. Make sure to check your spam folder just in case.</p>
+        <p>You'll receive a Calendly confirmation email<span id="emailNote"></span> with the Zoom link for our lesson. Make sure to check your spam folder just in case.</p>
       </div>
 
       <div class="thankyou-step">
@@ -134,5 +135,34 @@
       <a href="/" class="thankyou-home">&larr; Back to eslwithjanice.com</a>
     </div>
   </div>
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var name = params.get('invitee_full_name');
+      var email = params.get('invitee_email');
+      var startTime = params.get('event_start_time');
+
+      // Personalize greeting with student's first name
+      if (name) {
+        var firstName = name.split(' ')[0];
+        document.getElementById('nameGreeting').textContent = ', ' + firstName;
+      }
+
+      // Show which email to check
+      if (email) {
+        document.getElementById('emailNote').textContent = ' at ' + email;
+      }
+
+      // Show the scheduled lesson date & time
+      if (startTime) {
+        var date = new Date(startTime);
+        var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' };
+        var formatted = date.toLocaleDateString(undefined, options);
+        var el = document.getElementById('lessonTime');
+        el.textContent = 'Your trial is on ' + formatted;
+        el.style.display = 'block';
+      }
+    })();
+  </script>
 </body>
 </html>

@@ -94,6 +94,28 @@ document.querySelectorAll('.services-grid, .pricing-grid, .testimonials-grid, .a
   });
 });
 
+// ===== Course Dropdown — Pricing Cards =====
+document.querySelectorAll('.course-select').forEach(function(select) {
+  var prices = JSON.parse(select.getAttribute('data-prices'));
+  var card = select.closest('.pricing-body');
+
+  select.addEventListener('change', function() {
+    var course = prices[this.value];
+    // Update price display
+    card.querySelector('.price-amount').textContent = '$' + course.price;
+    // Update package deal
+    card.querySelector('.pkg-price').textContent = '$' + course.pkg;
+    // Update pay 1 lesson button
+    var pay1 = card.querySelector('.pay1');
+    pay1.href = course.pay1;
+    pay1.textContent = 'Pay 1 Lesson \u2014 $' + course.price;
+    // Update pay 10 lessons button
+    var pay10 = card.querySelector('.pay10');
+    pay10.href = course.pay10;
+    pay10.innerHTML = 'Pay 10 Lessons \u2014 <s>$' + course.orig + '</s> $' + course.pkg;
+  });
+});
+
 // ===== Contact Form Handling =====
 const contactForm = document.getElementById('contactForm');
 

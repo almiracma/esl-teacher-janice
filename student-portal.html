@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Portal — Teacher Janice ESL</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="styles.css?v=31">
+  <link rel="stylesheet" href="portal.css?v=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Password Gate -->
+  <div id="passwordGate" class="portal-gate">
+    <div class="gate-card">
+      <div class="gate-icon">&#128274;</div>
+      <h1>Student Portal</h1>
+      <p class="gate-subtitle">Enter the password provided by Teacher Janice to access your course materials.</p>
+      <div class="gate-input-wrap">
+        <input type="password" id="portalPassword" placeholder="Enter your password" autocomplete="off">
+      </div>
+      <p id="portalError" class="gate-error"></p>
+      <button onclick="checkPassword()" class="btn btn-primary">Access Portal</button>
+      <p class="gate-footer">
+        Don't have a password?<br>
+        <a href="https://eslwithjanice.com/#pricing">Book a course</a> to get started!
+      </p>
+    </div>
+  </div>
+
+  <!-- Portal Content (hidden until authenticated) -->
+  <div id="portalContent" class="portal-content" style="display:none;">
+
+    <!-- Header -->
+    <header class="portal-header">
+      <div class="container">
+        <a href="/" class="portal-logo">Teacher <span>Janice</span></a>
+        <div class="portal-header-right">
+          <span class="portal-welcome">Student Portal</span>
+          <button class="btn-logout" onclick="logout()">Log Out</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="portal-main">
+      <div class="portal-title">
+        <h2>Course Materials</h2>
+        <p>Browse topics by age group and level. Pick what interests you and prepare before class!</p>
+      </div>
+
+      <!-- Age Group Tabs -->
+      <div class="age-tabs" id="ageGroupTabs">
+        <!-- Rendered by portal.js -->
+      </div>
+
+      <!-- Course Cards -->
+      <div class="course-cards" id="courseContainer">
+        <!-- Rendered by portal.js -->
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="portal-footer">
+      <p>Need help? Email <a href="mailto:eslteacherjanice@gmail.com">eslteacherjanice@gmail.com</a></p>
+      <a href="/">&larr; Back to eslwithjanice.com</a>
+    </footer>
+
+    <!-- Watermark -->
+    <div class="portal-watermark"></div>
+  </div>
+
+  <script src="portal.js?v=1"></script>
+</body>
+</html>

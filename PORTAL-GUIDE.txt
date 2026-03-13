@@ -1,0 +1,133 @@
+=============================================
+STUDENT PORTAL — How to Manage Your Content
+=============================================
+
+PORTAL PASSWORD
+===============
+The current password is: ESLJanice2026
+Give this to students after they pay for a course.
+
+To change the password:
+1. Go to https://emn178.github.io/online-tools/sha256.html
+2. Type your new password and click "Hash"
+3. Copy the hash result
+4. Open portal.js
+5. Replace the long code after CORRECT_HASH = with your new hash
+6. Save, commit, and push to GitHub
+
+
+HOW TO ADD A NEW TOPIC
+=======================
+Open the file: course-data.json
+
+Find the right section (age group > course > level > topics)
+and add a new entry using this template:
+
+    {
+      "title": "Your Topic Title Here",
+      "description": "A short 1-2 sentence description of what students will learn.",
+      "materials": []
+    }
+
+IMPORTANT: Make sure there's a comma after the } of the previous
+topic before pasting a new one. Example:
+
+    {
+      "title": "Previous Topic",
+      "description": "...",
+      "materials": []
+    },                              <-- comma here!
+    {
+      "title": "New Topic",
+      "description": "...",
+      "materials": []
+    }
+
+
+HOW TO ADD DOWNLOADABLE MATERIALS (PDFs)
+=========================================
+1. Put your PDF file in the materials/ folder:
+   Example: materials/kids/general-english/beginner/my-worksheet.pdf
+
+2. In course-data.json, update the topic's "materials" array:
+
+    "materials": [
+      {
+        "label": "Worksheet - Greetings",
+        "file": "materials/kids/general-english/beginner/my-worksheet.pdf"
+      }
+    ]
+
+   You can add multiple files to one topic:
+
+    "materials": [
+      {
+        "label": "Worksheet",
+        "file": "materials/adults/business-english/beginner/worksheet.pdf"
+      },
+      {
+        "label": "Vocabulary List",
+        "file": "materials/adults/business-english/beginner/vocab.pdf"
+      }
+    ]
+
+
+FILE NAMING TIPS
+================
+- Use lowercase letters
+- Use hyphens instead of spaces: "my worksheet.pdf" → "my-worksheet.pdf"
+- Keep names short and descriptive
+
+
+HOW TO CHECK FOR ERRORS
+========================
+Before pushing changes, paste your course-data.json content into:
+https://jsonlint.com
+It will tell you if there are any formatting errors.
+
+
+HOW TO PUSH CHANGES TO THE WEBSITE
+====================================
+After editing course-data.json (or adding PDFs):
+
+1. Open Terminal
+2. Navigate to your website folder:
+   cd /Users/almira/esl_janice_website
+3. Run these commands:
+   git add .
+   git commit -m "Updated course materials"
+   git push
+
+Your changes will be live in about 1-2 minutes!
+
+
+FOLDER STRUCTURE
+================
+materials/
+  kids/
+    general-english/
+      beginner/
+      intermediate/
+      advanced/
+  teens/
+    general-english/
+      beginner/
+      intermediate/
+      advanced/
+    ielts-toefl/
+      beginner/
+      intermediate/
+      advanced/
+  adults/
+    general-english/
+      beginner/
+      intermediate/
+      advanced/
+    ielts-toefl/
+      beginner/
+      intermediate/
+      advanced/
+    business-english/
+      beginner/
+      intermediate/
+      advanced/

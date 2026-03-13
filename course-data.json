@@ -1,0 +1,408 @@
+{
+  "lastUpdated": "2026-03-13",
+  "ageGroups": [
+    {
+      "id": "kids",
+      "label": "Kids",
+      "ages": "Ages 4-12",
+      "icon": "&#128118;",
+      "courses": [
+        {
+          "id": "general-english",
+          "title": "General English",
+          "levels": [
+            {
+              "id": "beginner",
+              "label": "Beginner",
+              "topics": [
+                {
+                  "title": "Greetings & Introductions",
+                  "description": "Learn to say hello, introduce yourself, and ask simple questions like 'What is your name?'",
+                  "materials": []
+                },
+                {
+                  "title": "Colors & Shapes",
+                  "description": "Vocabulary for basic colors and shapes with fun matching activities and games.",
+                  "materials": []
+                },
+                {
+                  "title": "Numbers 1-20",
+                  "description": "Counting, recognizing, and writing numbers with songs and interactive exercises.",
+                  "materials": []
+                },
+                {
+                  "title": "My Family",
+                  "description": "Family member vocabulary — mom, dad, brother, sister — with picture activities.",
+                  "materials": []
+                },
+                {
+                  "title": "Animals & Pets",
+                  "description": "Learn animal names, sounds, and simple sentences like 'I have a cat.'",
+                  "materials": []
+                }
+              ]
+            },
+            {
+              "id": "intermediate",
+              "label": "Intermediate",
+              "topics": [
+                {
+                  "title": "Daily Routines",
+                  "description": "Talk about morning, afternoon, and evening activities using simple present tense.",
+                  "materials": []
+                },
+                {
+                  "title": "Food & Drinks",
+                  "description": "Ordering food, expressing likes and dislikes — 'I like pizza, I don't like broccoli.'",
+                  "materials": []
+                },
+                {
+                  "title": "Weather & Seasons",
+                  "description": "Describe the weather and seasons with adjectives — sunny, rainy, hot, cold.",
+                  "materials": []
+                }
+              ]
+            },
+            {
+              "id": "advanced",
+              "label": "Advanced",
+              "topics": [
+                {
+                  "title": "Storytelling",
+                  "description": "Read short stories, answer comprehension questions, and retell stories in your own words.",
+                  "materials": []
+                },
+                {
+                  "title": "Show & Tell",
+                  "description": "Practice speaking confidently by presenting a favorite object or topic to the class.",
+                  "materials": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "teens",
+      "label": "Teens",
+      "ages": "Ages 13-17",
+      "icon": "&#127891;",
+      "courses": [
+        {
+          "id": "general-english",
+          "title": "General English",
+          "levels": [
+            {
+              "id": "beginner",
+              "label": "Beginner",
+              "topics": [
+                {
+                  "title": "Self-Introduction & Small Talk",
+                  "description": "Introduce yourself naturally, talk about hobbies, school, and interests.",
+                  "materials": []
+                },
+                {
+                  "title": "Present Simple & Continuous",
+                  "description": "Master the difference between habits and actions happening now.",
+                  "materials": []
+                },
+                {
+                  "title": "Everyday Vocabulary",
+                  "description": "Essential words for school, home, travel, and social situations.",
+                  "materials": []
+                }
+              ]
+            },
+            {
+              "id": "intermediate",
+              "label": "Intermediate",
+              "topics": [
+                {
+                  "title": "Expressing Opinions",
+                  "description": "Learn to agree, disagree, and share your thoughts politely in discussions.",
+                  "materials": []
+                },
+                {
+                  "title": "Past Tenses & Storytelling",
+                  "description": "Use past simple and past continuous to tell stories and describe experiences.",
+                  "materials": []
+                },
+                {
+                  "title": "Travel & Directions",
+                  "description": "Navigate airports, ask for directions, and handle travel situations confidently.",
+                  "materials": []
+                }
+              ]
+            },
+            {
+              "id": "advanced",
+              "label": "Advanced",
+              "topics": [
+                {
+                  "title": "Debate & Discussion",
+                  "description": "Build arguments, use persuasive language, and participate in structured debates.",
+                  "materials": []
+                },
+                {
+                  "title": "Academic Writing Basics",
+                  "description": "Write structured paragraphs with topic sentences, supporting details, and conclusions.",
+                  "materials": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ielts-toefl",
+          "title": "IELTS / TOEFL Prep",
+          "levels": [
+            {
+              "id": "beginner",
+              "label": "Foundation",
+              "topics": [
+                {
+                  "title": "Exam Overview & Format",
+                  "description": "Understand the IELTS/TOEFL test structure, timing, scoring, and what to expect.",
+                  "materials": []
+                },
+                {
+                  "title": "Listening Skills Foundation",
+                  "description": "Practice identifying main ideas, key details, and speaker attitudes in recordings.",
+                  "materials": []
+                }
+              ]
+            },
+            {
+              "id": "intermediate",
+              "label": "Skill Building",
+              "topics": [
+                {
+                  "title": "Reading Comprehension Strategies",
+                  "description": "Skimming, scanning, and answering different question types efficiently.",
+                  "materials": []
+                },
+                {
+                  "title": "Speaking Part 1 & 2",
+                  "description": "Practice answering personal questions and delivering a 2-minute talk on a given topic.",
+                  "materials": []
+                },
+                {
+                  "title": "Writing Task 1 — Graphs & Charts",
+                  "description": "Describe visual data clearly with appropriate vocabulary and structure.",
+                  "materials": []
+                }
+              ]
+            },
+            {
+              "id": "advanced",
+              "label": "Exam Ready",
+              "topics": [
+                {
+                  "title": "Writing Task 2 — Essay Practice",
+                  "description": "Write opinion, discussion, and problem-solution essays with band 7+ structure.",
+                  "materials": []
+                },
+                {
+                  "title": "Full Practice Tests",
+                  "description": "Complete timed mock tests with detailed feedback and scoring.",
+                  "materials": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adults",
+      "label": "Adults",
+      "ages": "18+",
+      "icon": "&#128188;",
+      "courses": [
+        {
+          "id": "general-english",
+          "title": "General English",
+          "levels": [
+            {
+              "id": "beginner",
+              "label": "Beginner",
+              "topics": [
+                {
+                  "title": "Self-Introduction & Basics",
+                  "description": "Introduce yourself confidently, talk about your job, family, and daily life.",
+                  "materials": []
+                },
+                {
+                  "title": "Essential Grammar Review",
+                  "description": "Present tenses, articles, prepositions — build a solid grammar foundation.",
+                  "materials": []
+                },
+                {
+                  "title": "Shopping & Restaurants",
+                  "description": "Order food, ask about prices, and handle common shopping conversations.",
+                  "materials": []
+                }
+              ]
+            },
+            {
+              "id": "intermediate",
+              "label": "Intermediate",
+              "topics": [
+                {
+                  "title": "Conversation & Fluency",
+                  "description": "Practice natural conversation flow, fillers, and how to keep a discussion going.",
+                  "materials": []
+                },
+                {
+                  "title": "News & Current Events",
+                  "description": "Read and discuss news articles to build vocabulary and critical thinking skills.",
+                  "materials": []
+                },
+                {
+                  "title": "Pronunciation & Accent",
+                  "description": "Improve clarity with stress, intonation, and commonly mispronounced words.",
+                  "materials": []
+                }
+              ]
+            },
+            {
+              "id": "advanced",
+              "label": "Advanced",
+              "topics": [
+                {
+                  "title": "Idioms & Advanced Vocabulary",
+                  "description": "Master common idioms, phrasal verbs, and advanced expressions for natural speech.",
+                  "materials": []
+                },
+                {
+                  "title": "Public Speaking & Presentations",
+                  "description": "Structure presentations, use persuasive language, and speak with confidence.",
+                  "materials": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ielts-toefl",
+          "title": "IELTS / TOEFL Prep",
+          "levels": [
+            {
+              "id": "beginner",
+              "label": "Foundation",
+              "topics": [
+                {
+                  "title": "Exam Overview & Format",
+                  "description": "Understand the IELTS/TOEFL test structure, timing, scoring, and what to expect.",
+                  "materials": []
+                },
+                {
+                  "title": "Listening Skills Foundation",
+                  "description": "Practice identifying main ideas, key details, and speaker attitudes in recordings.",
+                  "materials": []
+                }
+              ]
+            },
+            {
+              "id": "intermediate",
+              "label": "Skill Building",
+              "topics": [
+                {
+                  "title": "Reading Comprehension Strategies",
+                  "description": "Skimming, scanning, and answering different question types efficiently.",
+                  "materials": []
+                },
+                {
+                  "title": "Speaking Part 1 & 2",
+                  "description": "Practice answering personal questions and delivering a 2-minute talk on a given topic.",
+                  "materials": []
+                },
+                {
+                  "title": "Writing Task 1 — Graphs & Charts",
+                  "description": "Describe visual data clearly with appropriate vocabulary and structure.",
+                  "materials": []
+                }
+              ]
+            },
+            {
+              "id": "advanced",
+              "label": "Exam Ready",
+              "topics": [
+                {
+                  "title": "Writing Task 2 — Essay Practice",
+                  "description": "Write opinion, discussion, and problem-solution essays with band 7+ structure.",
+                  "materials": []
+                },
+                {
+                  "title": "Full Practice Tests",
+                  "description": "Complete timed mock tests with detailed feedback and scoring.",
+                  "materials": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "business-english",
+          "title": "Business English",
+          "levels": [
+            {
+              "id": "beginner",
+              "label": "Beginner",
+              "topics": [
+                {
+                  "title": "Professional Self-Introduction",
+                  "description": "Introduce yourself at meetings, networking events, and job interviews.",
+                  "materials": []
+                },
+                {
+                  "title": "Email Writing Basics",
+                  "description": "Write clear, professional emails — subject lines, greetings, closings, and tone.",
+                  "materials": []
+                }
+              ]
+            },
+            {
+              "id": "intermediate",
+              "label": "Intermediate",
+              "topics": [
+                {
+                  "title": "Meetings & Conference Calls",
+                  "description": "Lead meetings, take turns speaking, agree/disagree professionally, and summarize action points.",
+                  "materials": []
+                },
+                {
+                  "title": "Presentation Skills",
+                  "description": "Structure business presentations, use visual aids, and handle Q&A confidently.",
+                  "materials": []
+                },
+                {
+                  "title": "Negotiation Language",
+                  "description": "Use polite but firm language for proposals, counteroffers, and closing deals.",
+                  "materials": []
+                }
+              ]
+            },
+            {
+              "id": "advanced",
+              "label": "Advanced",
+              "topics": [
+                {
+                  "title": "Report & Proposal Writing",
+                  "description": "Write executive summaries, project proposals, and formal business reports.",
+                  "materials": []
+                },
+                {
+                  "title": "Cross-Cultural Communication",
+                  "description": "Navigate cultural differences in international business with confidence and sensitivity.",
+                  "materials": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

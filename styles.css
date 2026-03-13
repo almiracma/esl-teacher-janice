@@ -1166,6 +1166,8 @@ img {
   color: rgba(255, 255, 255, 0.5);
   font-size: 1.05rem;
   margin-top: 44px;
+  max-width: none;
+  white-space: nowrap;
 }
 
 /* How It Works */

@@ -184,6 +184,18 @@ function renderDashboard() {
   html += '  </div>';
   html += '</div>';
 
+  // Book a Lesson button (only if student still has remaining lessons)
+  if (stats.remaining > 0) {
+    html += '<div class="dash-book">';
+    html += '  <a href="https://calendly.com/eslteacherjanice/regular-lesson-25mins" target="_blank" rel="noopener" class="dash-book-btn">📅 Book a Lesson</a>';
+    html += '  <span class="dash-book-note">You have ' + stats.remaining + ' lesson' + (stats.remaining === 1 ? '' : 's') + ' remaining</span>';
+    html += '</div>';
+  } else if (stats.total > 0 && stats.remaining <= 0) {
+    html += '<div class="dash-book">';
+    html += '  <span class="dash-book-note dash-book-done">You\'ve used all your lessons! 🎉 <a href="index.html#pricing">Get more lessons</a></span>';
+    html += '</div>';
+  }
+
   // Cancelled/rescheduled note
   if (stats.cancelled > 0 || stats.rescheduled > 0) {
     html += '<div class="dash-note">';

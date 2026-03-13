@@ -227,6 +227,53 @@
 .dash-stat-teal .dash-stat-num { color: var(--teal); }
 .dash-stat-navy .dash-stat-num { color: var(--navy); }
 
+.dash-book {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.dash-book-btn {
+  display: inline-block;
+  padding: 14px 36px;
+  background: var(--teal);
+  color: var(--white);
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(42, 157, 143, 0.3);
+}
+
+.dash-book-btn:hover {
+  background: #238b7e;
+  box-shadow: 0 6px 20px rgba(42, 157, 143, 0.4);
+  transform: translateY(-1px);
+}
+
+.dash-book-note {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.82rem;
+  color: var(--gray-400, #aaa);
+}
+
+.dash-book-done {
+  font-size: 0.9rem;
+  color: var(--gray-500);
+}
+
+.dash-book-done a {
+  color: var(--teal);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.dash-book-done a:hover {
+  text-decoration: underline;
+}
+
 .dash-note {
   text-align: center;
   font-size: 0.82rem;

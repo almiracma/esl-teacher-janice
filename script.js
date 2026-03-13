@@ -3,7 +3,7 @@
 // (See SETUP-GUIDE.txt for how to get this URL)
 // Leave it blank ('') until you've set up Google Sheets.
 // ============================================================
-const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxDCVPqW1uXVsYBMwO8FaAIOYdmiXX2rwc0LBsjT_Zd5WVOSu8zLTTvPrOglNYBwnCvlw/exec';
+const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz-jtuUOVjwxZv1UpsDMCs7E9Nk0A66UlxU9MbQBVClljIwyE98CngcdZob7LyOIrSRPQ/exec';
 // ============================================================
 
 // Helper: Send form data to Google Sheets

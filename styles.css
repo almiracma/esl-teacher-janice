@@ -631,7 +631,7 @@ img {
   padding: 12px;
   background: var(--teal-light);
   border-radius: var(--radius-sm);
-  margin-bottom: 20px;
+  margin-bottom: 28px;
 }
 
 .save-tag {
@@ -640,7 +640,7 @@ img {
 }
 
 .pay-buttons {
-  margin-top: 12px;
+  margin-top: 28px;
   display: flex;
   flex-direction: column;
   gap: 8px;

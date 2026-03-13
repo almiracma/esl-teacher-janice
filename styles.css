@@ -1162,7 +1162,7 @@ img {
   font-size: 1.1rem;
 }
 
-.cta-hint {
+.cta-card .cta-hint {
   color: rgba(255, 255, 255, 0.5);
   font-size: 0.85rem;
   margin-top: 44px;

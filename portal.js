@@ -1,23 +1,18 @@
 // =============================================================
-// STUDENT PORTAL — Password, Course Rendering & Protection
+// STUDENT PORTAL — Login, Dashboard, Course Catalog
 // =============================================================
 
-// Each age group has its own password. Teacher Janice gives the right one based on what the student bought.
-// To change: generate a new hash at https://emn178.github.io/online-tools/sha256.html
-var PASSWORD_MAP = {
-  'acc4e8c0459a9e6aa2bf00a5022b481702e475644a7a245844b3a08d69d1eb50': 'kids',    // ESLKids2026
-  'f674fd7cf34e080bccea7bffc674dfb1a801b5597294727bf8cb7c32e72d86b3': 'teens',   // ESLTeens2026
-  'e658cb038403021add6a87f086c54aa7b0a7ed4adcda0354eb43e9f464768caf': 'adults'   // ESLAdults2026
-};
+// Google Sheets endpoint (handles login via doGet, bookings via doPost)
+var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz-jtuUOVjwxZv1UpsDMCs7E9Nk0A66UlxU9MbQBVClljIwyE98CngcdZob7LyOIrSRPQ/exec';
 
 // Current state
 var courseData = null;
+var studentData = null; // { student, lessons, stats }
 var activeAgeGroup = null;
-var activeLevels = {}; // { courseId: levelId }
-var studentName = '';
+var activeLevels = {};
 
 // =============================================================
-// PASSWORD
+// PASSWORD & LOGIN
 // =============================================================
 async function hashPassword(password) {
   var encoder = new TextEncoder();
@@ -28,45 +23,52 @@ async function hashPassword(password) {
 }
 
 async function checkPassword() {
-  var nameInput = document.getElementById('portalStudentName').value.trim();
   var passInput = document.getElementById('portalPassword').value.trim();
+  if (!passInput) return;
 
-  if (!nameInput || !passInput) {
-    var errorEl = document.getElementById('portalError');
-    errorEl.textContent = 'Please enter your name and password.';
+  var errorEl = document.getElementById('portalError');
+  var btn = document.querySelector('.gate-card .btn');
+
+  // Show loading state
+  btn.textContent = 'Checking...';
+  btn.disabled = true;
+  errorEl.style.display = 'none';
+
+  try {
+    var hash = await hashPassword(passInput);
+    var response = await fetch(SHEETS_URL + '?action=login&hash=' + encodeURIComponent(hash));
+    var result = await response.json();
+
+    if (result.status === 'success') {
+      sessionStorage.setItem('portal_hash', hash);
+      sessionStorage.setItem('portal_data', JSON.stringify(result));
+      studentData = result;
+      activeAgeGroup = result.student.ageGroup;
+      showPortal();
+    } else {
+      errorEl.textContent = 'Incorrect password. Please try again or contact Teacher Janice.';
+      errorEl.style.display = 'block';
+      document.getElementById('portalPassword').value = '';
+      document.getElementById('portalPassword').focus();
+    }
+  } catch (err) {
+    errorEl.textContent = 'Could not connect. Please check your internet and try again.';
     errorEl.style.display = 'block';
-    return;
   }
 
-  var hash = await hashPassword(passInput);
-  var group = PASSWORD_MAP[hash];
-  if (group) {
-    sessionStorage.setItem('portal_auth', hash);
-    sessionStorage.setItem('portal_group', group);
-    sessionStorage.setItem('portal_name', nameInput);
-    activeAgeGroup = group;
-    studentName = nameInput;
-    document.getElementById('portalError').style.display = 'none';
-    showPortal();
-  } else {
-    var errorEl = document.getElementById('portalError');
-    errorEl.textContent = 'Incorrect password. Please try again or contact Teacher Janice.';
-    errorEl.style.display = 'block';
-    document.getElementById('portalPassword').value = '';
-    document.getElementById('portalPassword').focus();
-  }
+  btn.textContent = 'Access Portal';
+  btn.disabled = false;
 }
 
 function logout() {
-  sessionStorage.removeItem('portal_auth');
-  sessionStorage.removeItem('portal_group');
-  sessionStorage.removeItem('portal_name');
+  sessionStorage.removeItem('portal_hash');
+  sessionStorage.removeItem('portal_data');
+  studentData = null;
   activeAgeGroup = null;
-  studentName = '';
   courseData = null;
   document.getElementById('portalContent').style.display = 'none';
+  document.getElementById('portalDashboard').style.display = 'none';
   document.getElementById('passwordGate').style.display = 'flex';
-  document.getElementById('portalStudentName').value = '';
   document.getElementById('portalPassword').value = '';
 }
 
@@ -77,86 +79,160 @@ async function showPortal() {
   document.getElementById('passwordGate').style.display = 'none';
   document.getElementById('portalContent').style.display = 'block';
 
+  // Render dashboard
+  renderDashboard();
+
+  // Load and render course catalog
   if (!courseData) {
     try {
       var response = await fetch('course-data.json?v=' + Date.now());
       courseData = await response.json();
-      // Hide age group tabs — students only see their own group
       document.getElementById('ageGroupTabs').style.display = 'none';
-      // Show welcome message with the group name and student name
+
+      // Update catalog subtitle
       var group = courseData.ageGroups.find(function(g) { return g.id === activeAgeGroup; });
       if (group) {
-        var greeting = studentName ? ('Welcome, ' + studentName.split(' ')[0] + '! ') : '';
         document.getElementById('portalSubtitle').textContent =
-          greeting + group.label + ' (' + group.ages + ') — Browse topics by level and prepare before class!';
+          group.label + ' (' + group.ages + ') — Browse topics by level and prepare before class!';
       }
       renderCourses();
     } catch (err) {
       document.getElementById('courseContainer').innerHTML =
-        '<div class="coming-soon">Course content could not be loaded. Please try again later or contact Teacher Janice.</div>';
+        '<div class="coming-soon">Course content could not be loaded. Please try again later.</div>';
     }
   }
 }
 
-// Check if already authenticated on page load
+// Auto-login on page load if session exists
 (function() {
-  var stored = sessionStorage.getItem('portal_auth');
-  var storedGroup = sessionStorage.getItem('portal_group');
-  var storedName = sessionStorage.getItem('portal_name');
-  if (stored && PASSWORD_MAP[stored] && storedGroup) {
-    activeAgeGroup = storedGroup;
-    studentName = storedName || '';
-    showPortal();
+  var storedHash = sessionStorage.getItem('portal_hash');
+  var storedData = sessionStorage.getItem('portal_data');
+  if (storedHash && storedData) {
+    try {
+      studentData = JSON.parse(storedData);
+      activeAgeGroup = studentData.student.ageGroup;
+      showPortal();
+      // Refresh data in background for latest lesson info
+      refreshStudentData(storedHash);
+    } catch(e) {
+      sessionStorage.removeItem('portal_hash');
+      sessionStorage.removeItem('portal_data');
+    }
   }
 
   // Enter key on password input
   var pwInput = document.getElementById('portalPassword');
   if (pwInput) {
     pwInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        checkPassword();
-      }
-    });
-  }
-
-  // Enter key on name input moves to password
-  var nameInput = document.getElementById('portalStudentName');
-  if (nameInput) {
-    nameInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        document.getElementById('portalPassword').focus();
-      }
+      if (e.key === 'Enter') checkPassword();
     });
   }
 })();
 
+// Silently refresh student data in the background
+async function refreshStudentData(hash) {
+  try {
+    var response = await fetch(SHEETS_URL + '?action=login&hash=' + encodeURIComponent(hash));
+    var result = await response.json();
+    if (result.status === 'success') {
+      studentData = result;
+      sessionStorage.setItem('portal_data', JSON.stringify(result));
+      renderDashboard();
+    }
+  } catch(e) {
+    // Silently fail — use cached data
+  }
+}
+
+// =============================================================
+// DASHBOARD
+// =============================================================
+function renderDashboard() {
+  var container = document.getElementById('portalDashboard');
+  if (!studentData || !container) return;
+
+  var s = studentData.student;
+  var stats = studentData.stats;
+  var lessons = studentData.lessons;
+  var firstName = s.name.split(' ')[0];
+
+  var html = '';
+
+  // Welcome
+  html += '<div class="dash-welcome">';
+  html += '  <h2>Welcome back, ' + escapeHtml(firstName) + '!</h2>';
+  html += '  <p>' + escapeHtml(s.course || 'ESL Course') + '</p>';
+  html += '</div>';
+
+  // Stats cards
+  html += '<div class="dash-stats">';
+  html += '  <div class="dash-stat">';
+  html += '    <div class="dash-stat-num">' + stats.total + '</div>';
+  html += '    <div class="dash-stat-label">Total Lessons</div>';
+  html += '  </div>';
+  html += '  <div class="dash-stat dash-stat-teal">';
+  html += '    <div class="dash-stat-num">' + stats.completed + '</div>';
+  html += '    <div class="dash-stat-label">Completed</div>';
+  html += '  </div>';
+  html += '  <div class="dash-stat">';
+  html += '    <div class="dash-stat-num">' + stats.scheduled + '</div>';
+  html += '    <div class="dash-stat-label">Upcoming</div>';
+  html += '  </div>';
+  html += '  <div class="dash-stat dash-stat-navy">';
+  html += '    <div class="dash-stat-num">' + stats.remaining + '</div>';
+  html += '    <div class="dash-stat-label">Remaining</div>';
+  html += '  </div>';
+  html += '</div>';
+
+  // Cancelled/rescheduled note
+  if (stats.cancelled > 0 || stats.rescheduled > 0) {
+    html += '<div class="dash-note">';
+    var parts = [];
+    if (stats.cancelled > 0) parts.push(stats.cancelled + ' cancelled');
+    if (stats.rescheduled > 0) parts.push(stats.rescheduled + ' rescheduled');
+    html += parts.join(' &middot; ');
+    html += '</div>';
+  }
+
+  // Lesson history
+  if (lessons.length > 0) {
+    html += '<div class="dash-history">';
+    html += '  <h3>Lesson History</h3>';
+    html += '  <div class="dash-lessons">';
+    lessons.forEach(function(lesson) {
+      var statusClass = 'dash-lesson-status';
+      var ls = (lesson.status || '').toLowerCase();
+      if (ls === 'completed' || ls === 'done') statusClass += ' status-completed';
+      else if (ls === 'scheduled' || ls === 'upcoming' || ls === 'confirmed') statusClass += ' status-scheduled';
+      else if (ls === 'cancelled' || ls === 'canceled') statusClass += ' status-cancelled';
+      else if (ls === 'rescheduled') statusClass += ' status-rescheduled';
+
+      html += '    <div class="dash-lesson">';
+      html += '      <div class="dash-lesson-date">';
+      html += '        <span class="dash-date">' + escapeHtml(lesson.date) + '</span>';
+      html += '        <span class="dash-time">' + escapeHtml(lesson.time) + '</span>';
+      html += '      </div>';
+      html += '      <div class="dash-lesson-info">' + escapeHtml(lesson.course || 'Lesson');
+      if (lesson.lessonNum) html += ' <span class="dash-lesson-num">#' + escapeHtml(lesson.lessonNum.toString()) + '</span>';
+      html += '      </div>';
+      html += '      <div class="' + statusClass + '">' + escapeHtml(lesson.status || '') + '</div>';
+      html += '    </div>';
+    });
+    html += '  </div>';
+    html += '</div>';
+  } else {
+    html += '<div class="dash-empty">';
+    html += '  No lessons booked yet. <a href="https://calendly.com/eslteacherjanice/regular-lesson-25mins" target="_blank" rel="noopener">Book your first lesson!</a>';
+    html += '</div>';
+  }
+
+  container.innerHTML = html;
+  container.style.display = 'block';
+}
+
 // =============================================================
 // RENDER COURSES
 // =============================================================
-function renderAgeGroupTabs() {
-  var tabsContainer = document.getElementById('ageGroupTabs');
-  tabsContainer.innerHTML = '';
-
-  courseData.ageGroups.forEach(function(group) {
-    var btn = document.createElement('button');
-    btn.className = 'age-tab' + (group.id === activeAgeGroup ? ' active' : '');
-    btn.textContent = group.label + ' (' + group.ages + ')';
-    btn.onclick = function() { switchAgeGroup(group.id); };
-    tabsContainer.appendChild(btn);
-  });
-}
-
-function switchAgeGroup(groupId) {
-  activeAgeGroup = groupId;
-
-  // Update tab styles
-  document.querySelectorAll('.age-tab').forEach(function(tab, i) {
-    tab.className = 'age-tab' + (courseData.ageGroups[i].id === groupId ? ' active' : '');
-  });
-
-  renderCourses();
-}
-
 function renderCourses() {
   var container = document.getElementById('courseContainer');
   container.innerHTML = '';
@@ -168,7 +244,6 @@ function renderCourses() {
     var card = document.createElement('div');
     card.className = 'course-card';
 
-    // Default to first level if not set
     if (!activeLevels[course.id]) {
       activeLevels[course.id] = course.levels[0].id;
     }
@@ -250,24 +325,14 @@ function escapeHtml(str) {
 // =============================================================
 // CONTENT PROTECTION
 // =============================================================
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
 
-// Disable right-click
-document.addEventListener('contextmenu', function(e) {
-  e.preventDefault();
-});
-
-// Disable keyboard shortcuts for copying, viewing source, saving, printing
 document.addEventListener('keydown', function(e) {
   var blocked = ['c', 'u', 's', 'p'];
   if ((e.ctrlKey || e.metaKey) && blocked.indexOf(e.key.toLowerCase()) >= 0) {
     e.preventDefault();
   }
-  if (e.key === 'F12') {
-    e.preventDefault();
-  }
+  if (e.key === 'F12') { e.preventDefault(); }
 });
 
-// Disable drag
-document.addEventListener('dragstart', function(e) {
-  e.preventDefault();
-});
+document.addEventListener('dragstart', function(e) { e.preventDefault(); });

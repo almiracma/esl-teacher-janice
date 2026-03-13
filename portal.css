@@ -169,6 +169,178 @@
   padding: 40px 20px 60px;
 }
 
+/* ---- Lesson Dashboard ---- */
+.portal-dashboard {
+  margin-bottom: 48px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.dash-welcome {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.dash-welcome h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+
+.dash-welcome p {
+  color: var(--gray-500);
+  font-size: 0.95rem;
+}
+
+.dash-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.dash-stat {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 20px 16px;
+  text-align: center;
+  border: 1px solid var(--gray-200);
+}
+
+.dash-stat-num {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.dash-stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray-500);
+}
+
+.dash-stat-teal .dash-stat-num { color: var(--teal); }
+.dash-stat-navy .dash-stat-num { color: var(--navy); }
+
+.dash-note {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--gray-400, #aaa);
+  margin-bottom: 24px;
+}
+
+.dash-history {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+  overflow: hidden;
+}
+
+.dash-history h3 {
+  padding: 16px 24px 12px;
+  font-size: 0.95rem;
+  color: var(--navy);
+  font-weight: 700;
+  border-bottom: 1px solid var(--gray-100, #f0f0f0);
+}
+
+.dash-lessons {
+  padding: 4px 0;
+}
+
+.dash-lesson {
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--gray-100, #f0f0f0);
+  gap: 16px;
+}
+
+.dash-lesson:last-child {
+  border-bottom: none;
+}
+
+.dash-lesson-date {
+  flex-shrink: 0;
+  min-width: 120px;
+}
+
+.dash-date {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.dash-time {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--gray-500);
+}
+
+.dash-lesson-info {
+  flex: 1;
+  font-size: 0.85rem;
+  color: var(--gray-500);
+}
+
+.dash-lesson-num {
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.dash-lesson-status {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 50px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.status-completed {
+  background: rgba(42, 157, 143, 0.1);
+  color: var(--teal);
+}
+
+.status-scheduled {
+  background: rgba(26, 39, 68, 0.08);
+  color: var(--navy);
+}
+
+.status-cancelled {
+  background: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+}
+
+.status-rescheduled {
+  background: rgba(243, 156, 18, 0.1);
+  color: #f39c12;
+}
+
+.dash-empty {
+  text-align: center;
+  padding: 32px 24px;
+  color: var(--gray-500);
+  font-size: 0.9rem;
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+}
+
+.dash-empty a {
+  color: var(--teal);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ---- Course Catalog Title ---- */
 .portal-title {
   text-align: center;
   margin-bottom: 32px;
@@ -503,6 +675,24 @@
     font-size: 0.7rem;
   }
 
+  .dash-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dash-lesson {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 16px;
+  }
+
+  .dash-lesson-date {
+    min-width: 100px;
+  }
+
+  .dash-history h3 {
+    padding: 14px 16px 10px;
+  }
+
   .portal-watermark::after {
     font-size: 1.8rem;
   }
@@ -511,6 +701,10 @@
 @media (max-width: 480px) {
   .gate-card h1 {
     font-size: 1.5rem;
+  }
+
+  .dash-welcome h2 {
+    font-size: 1.3rem;
   }
 
   .age-tabs {

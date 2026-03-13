@@ -1,8 +1,25 @@
 // =============================================================
 // GOOGLE APPS SCRIPT — Paste this into your Google Sheet
-// (See SETUP-GUIDE.txt for step-by-step instructions)
+// (See PORTAL-GUIDE.txt for instructions)
 // =============================================================
 
+// --- GET: Student Portal Login & Dashboard Data ---
+function doGet(e) {
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var action = (e.parameter.action || '').toLowerCase();
+
+    if (action === 'login') {
+      return handleLogin(ss, e.parameter.hash || '');
+    }
+
+    return jsonResponse({ status: 'error', message: 'Unknown action' });
+  } catch (error) {
+    return jsonResponse({ status: 'error', message: error.toString() });
+  }
+}
+
+// --- POST: Bookings, Inquiries ---
 function doPost(e) {
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -10,8 +27,6 @@ function doPost(e) {
 
     if (data.formType === 'Booking') {
       handleBooking(ss, data);
-    } else if (data.formType === 'TopicSelection') {
-      handleTopicSelection(ss, data);
     } else {
       handleInquiry(ss, data);
     }
@@ -25,6 +40,127 @@ function doPost(e) {
       .createTextOutput(JSON.stringify({ status: 'error', message: error.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+// =============================================================
+// STUDENT LOGIN — Checks password against the Students sheet
+// Students sheet: Name | Password | Age Group | Total Lessons | Course | Status
+// =============================================================
+function handleLogin(ss, clientHash) {
+  var studentsSheet = ss.getSheetByName('Students');
+  if (!studentsSheet || studentsSheet.getLastRow() < 2) {
+    return jsonResponse({ status: 'error', message: 'No students registered yet' });
+  }
+
+  var data = studentsSheet.getDataRange().getValues();
+  var student = null;
+
+  // Check each student's password (skip header row)
+  for (var i = 1; i < data.length; i++) {
+    var name = (data[i][0] || '').toString().trim();
+    var password = (data[i][1] || '').toString().trim();
+    var ageGroup = (data[i][2] || '').toString().trim();
+    var totalLessons = parseInt(data[i][3]) || 0;
+    var course = (data[i][4] || '').toString().trim();
+    var status = (data[i][5] || 'Active').toString().trim();
+
+    if (!password || !name) continue;
+    if (status.toLowerCase() === 'inactive') continue;
+
+    // Hash the stored password and compare with what the student sent
+    var serverHash = sha256(password);
+    if (serverHash === clientHash) {
+      student = {
+        name: name,
+        ageGroup: ageGroup.toLowerCase(),
+        totalLessons: totalLessons,
+        course: course
+      };
+      break;
+    }
+  }
+
+  if (!student) {
+    return jsonResponse({ status: 'error', message: 'Invalid password' });
+  }
+
+  // Get lesson history from Bookings sheet
+  var bookingsSheet = ss.getSheetByName('Bookings');
+  var lessons = [];
+  var stats = { completed: 0, scheduled: 0, cancelled: 0, rescheduled: 0 };
+
+  if (bookingsSheet && bookingsSheet.getLastRow() >= 2) {
+    var bookings = bookingsSheet.getDataRange().getValues();
+    // Columns: Date | Time | Student Name | Course | Lesson # | Duration | Status | Platform | Notes
+    for (var i = 1; i < bookings.length; i++) {
+      var bookingName = (bookings[i][2] || '').toString().trim();
+      if (bookingName.toLowerCase() === student.name.toLowerCase()) {
+        var lessonDate = bookings[i][0];
+        var lessonTime = bookings[i][1];
+        var courseName = (bookings[i][3] || '').toString();
+        var lessonNum = (bookings[i][4] || '').toString();
+        var lessonStatus = (bookings[i][6] || '').toString();
+
+        var dateStr = '';
+        var timeStr = '';
+        try {
+          if (lessonDate) dateStr = Utilities.formatDate(new Date(lessonDate), Session.getScriptTimeZone(), 'MMM d, yyyy');
+          if (lessonTime) timeStr = Utilities.formatDate(new Date(lessonTime), Session.getScriptTimeZone(), 'h:mm a');
+        } catch(err) {}
+
+        lessons.push({
+          date: dateStr,
+          time: timeStr,
+          course: courseName,
+          lessonNum: lessonNum,
+          status: lessonStatus
+        });
+
+        // Count by status
+        var s = lessonStatus.toLowerCase();
+        if (s === 'completed' || s === 'done') stats.completed++;
+        else if (s === 'scheduled' || s === 'upcoming' || s === 'confirmed') stats.scheduled++;
+        else if (s === 'cancelled' || s === 'canceled') stats.cancelled++;
+        else if (s === 'rescheduled') stats.rescheduled++;
+      }
+    }
+  }
+
+  // Sort lessons by date (newest first)
+  lessons.sort(function(a, b) {
+    return new Date(b.date || 0) - new Date(a.date || 0);
+  });
+
+  var remaining = Math.max(0, student.totalLessons - stats.completed);
+
+  return jsonResponse({
+    status: 'success',
+    student: student,
+    lessons: lessons,
+    stats: {
+      total: student.totalLessons,
+      completed: stats.completed,
+      scheduled: stats.scheduled,
+      cancelled: stats.cancelled,
+      rescheduled: stats.rescheduled,
+      remaining: remaining
+    }
+  });
+}
+
+// SHA-256 hash (matches the client-side crypto.subtle.digest)
+function sha256(input) {
+  var digest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, input.toString(), Utilities.Charset.UTF_8);
+  return digest.map(function(b) {
+    return ('0' + ((b < 0 ? b + 256 : b).toString(16))).slice(-2);
+  }).join('');
+}
+
+// Helper: return JSON response
+function jsonResponse(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
 }
 
 // =============================================================
@@ -43,60 +179,40 @@ function handleBooking(ss, data) {
       'Date', 'Time', 'Student Name', 'Course',
       'Lesson #', 'Duration', 'Status', 'Platform', 'Notes'
     ]);
-    // Style the header row
     var headerRange = sheet.getRange(1, 1, 1, 9);
     headerRange.setFontWeight('bold');
     headerRange.setBackground('#1A2744');
     headerRange.setFontColor('#FFFFFF');
     headerRange.setHorizontalAlignment('center');
-    // Set column widths
-    sheet.setColumnWidth(1, 120);  // Date
-    sheet.setColumnWidth(2, 100);  // Time
-    sheet.setColumnWidth(3, 140);  // Student Name
-    sheet.setColumnWidth(4, 160);  // Course
-    sheet.setColumnWidth(5, 80);   // Lesson #
-    sheet.setColumnWidth(6, 80);   // Duration
-    sheet.setColumnWidth(7, 100);  // Status
-    sheet.setColumnWidth(8, 120);  // Platform
-    sheet.setColumnWidth(9, 200);  // Notes
-    // Freeze header row
+    sheet.setColumnWidth(1, 120);
+    sheet.setColumnWidth(2, 100);
+    sheet.setColumnWidth(3, 140);
+    sheet.setColumnWidth(4, 160);
+    sheet.setColumnWidth(5, 80);
+    sheet.setColumnWidth(6, 80);
+    sheet.setColumnWidth(7, 100);
+    sheet.setColumnWidth(8, 120);
+    sheet.setColumnWidth(9, 200);
     sheet.setFrozenRows(1);
   }
 
-  // Parse the lesson datetime
   var lessonDate = data.startTime ? new Date(data.startTime) : '';
   var courseName = data.eventType || '';
-  // Trial lessons are 15 min, regular lessons are 25 min
   var duration = courseName.toLowerCase().indexOf('trial') >= 0 ? '15 min' : '25 min';
 
-  // Append the booking (matches: Date | Time | Student Name | Course | Lesson # | Duration | Status | Platform | Notes)
   sheet.appendRow([
-    lessonDate,           // A: Date (formatted below)
-    lessonDate,           // B: Time (same date object, formatted to time only)
-    data.name || '',      // C: Student Name
-    courseName,           // D: Course
-    '',                   // E: Lesson # (fill in manually)
-    duration,             // F: Duration
-    'Scheduled',          // G: Status
-    '',                   // H: Platform (fill in manually)
-    ''                    // I: Notes
+    lessonDate, lessonDate, data.name || '', courseName,
+    '', duration, 'Scheduled', '', ''
   ]);
 
   var lastRow = sheet.getLastRow();
-
-  // Format date column (date only) and time column (time only)
   sheet.getRange(lastRow, 1).setNumberFormat('yyyy-mm-dd');
   sheet.getRange(lastRow, 2).setNumberFormat('h:mm AM/PM');
 
-  // Style "Scheduled" status in teal (column G = 7)
   var statusCell = sheet.getRange(lastRow, 7);
   statusCell.setFontColor('#2A9D8F');
   statusCell.setFontWeight('bold');
-
-  // Highlight new row with light yellow
   sheet.getRange(lastRow, 1, 1, 9).setBackground('#FFF9E6');
-
-  // Mark the Bookings tab RED so you can see new data at a glance
   sheet.setTabColor('#FF4444');
 }
 
@@ -107,118 +223,37 @@ function handleInquiry(ss, data) {
   var sheetName = 'Inquiries';
   var sheet = ss.getSheetByName(sheetName);
 
-  // Create the sheet if it doesn't exist
   if (!sheet) {
     sheet = ss.insertSheet(sheetName);
     sheet.appendRow([
       'Date', 'Name', 'Email', 'Message', 'Status', 'Follow-up Date', 'Notes'
     ]);
-    // Style the header row
     var headerRange = sheet.getRange(1, 1, 1, 7);
     headerRange.setFontWeight('bold');
     headerRange.setBackground('#1A2744');
     headerRange.setFontColor('#FFFFFF');
     headerRange.setHorizontalAlignment('center');
-    // Set column widths
-    sheet.setColumnWidth(1, 100); // Date
-    sheet.setColumnWidth(2, 140); // Name
-    sheet.setColumnWidth(3, 220); // Email
-    sheet.setColumnWidth(4, 300); // Message
-    sheet.setColumnWidth(5, 100); // Status
-    sheet.setColumnWidth(6, 120); // Follow-up Date
-    sheet.setColumnWidth(7, 200); // Notes
-    // Freeze header row
+    sheet.setColumnWidth(1, 100);
+    sheet.setColumnWidth(2, 140);
+    sheet.setColumnWidth(3, 220);
+    sheet.setColumnWidth(4, 300);
+    sheet.setColumnWidth(5, 100);
+    sheet.setColumnWidth(6, 120);
+    sheet.setColumnWidth(7, 200);
     sheet.setFrozenRows(1);
   }
 
-  // Append the inquiry
   sheet.appendRow([
-    new Date(),
-    data.name || '',
-    data.email || '',
-    data.message || '',
-    'New',
-    '',
-    ''
+    new Date(), data.name || '', data.email || '',
+    data.message || '', 'New', '', ''
   ]);
 
-  // Format the new row's date column
   var lastRow = sheet.getLastRow();
   sheet.getRange(lastRow, 1).setNumberFormat('yyyy-mm-dd');
-
-  // Highlight "New" status in teal
   var statusCell = sheet.getRange(lastRow, 5);
   statusCell.setFontColor('#2A9D8F');
   statusCell.setFontWeight('bold');
-
-  // Highlight the entire new row with a light yellow background
   sheet.getRange(lastRow, 1, 1, 7).setBackground('#FFF9E6');
-
-  // Mark the Inquiries tab RED so you can see new data at a glance
-  sheet.setTabColor('#FF4444');
-}
-
-// =============================================================
-// TOPIC SELECTIONS — From the Student Portal
-// When a student clicks "Choose This Topic" in the portal
-// Columns: Date | Student Name | Age Group | Course | Level | Topic | Status | Notes
-// =============================================================
-function handleTopicSelection(ss, data) {
-  var sheetName = 'Topic Selections';
-  var sheet = ss.getSheetByName(sheetName);
-
-  // Create the sheet if it doesn't exist
-  if (!sheet) {
-    sheet = ss.insertSheet(sheetName);
-    sheet.appendRow([
-      'Date', 'Student Name', 'Age Group', 'Course',
-      'Level', 'Topic', 'Status', 'Notes'
-    ]);
-    // Style the header row
-    var headerRange = sheet.getRange(1, 1, 1, 8);
-    headerRange.setFontWeight('bold');
-    headerRange.setBackground('#1A2744');
-    headerRange.setFontColor('#FFFFFF');
-    headerRange.setHorizontalAlignment('center');
-    // Set column widths
-    sheet.setColumnWidth(1, 120);  // Date
-    sheet.setColumnWidth(2, 160);  // Student Name
-    sheet.setColumnWidth(3, 140);  // Age Group
-    sheet.setColumnWidth(4, 160);  // Course
-    sheet.setColumnWidth(5, 120);  // Level
-    sheet.setColumnWidth(6, 220);  // Topic
-    sheet.setColumnWidth(7, 100);  // Status
-    sheet.setColumnWidth(8, 200);  // Notes
-    // Freeze header row
-    sheet.setFrozenRows(1);
-  }
-
-  // Append the topic selection
-  sheet.appendRow([
-    new Date(),
-    data.studentName || '',
-    data.ageGroup || '',
-    data.course || '',
-    data.level || '',
-    data.topic || '',
-    'New',
-    ''
-  ]);
-
-  var lastRow = sheet.getLastRow();
-
-  // Format date column
-  sheet.getRange(lastRow, 1).setNumberFormat('yyyy-mm-dd h:mm AM/PM');
-
-  // Style "New" status in teal
-  var statusCell = sheet.getRange(lastRow, 7);
-  statusCell.setFontColor('#2A9D8F');
-  statusCell.setFontWeight('bold');
-
-  // Highlight new row with light yellow
-  sheet.getRange(lastRow, 1, 1, 8).setBackground('#FFF9E6');
-
-  // Mark the tab RED so Teacher Janice sees new selections
   sheet.setTabColor('#FF4444');
 }
 
@@ -229,7 +264,6 @@ function handleTopicSelection(ss, data) {
 function clearNewMarker() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
 
-  // Clear Inquiries markers
   var inquiries = ss.getSheetByName('Inquiries');
   if (inquiries) {
     inquiries.setTabColor('#1A2744');
@@ -242,7 +276,6 @@ function clearNewMarker() {
     }
   }
 
-  // Clear Bookings markers
   var bookings = ss.getSheetByName('Bookings');
   if (bookings) {
     bookings.setTabColor('#1A2744');
@@ -251,19 +284,6 @@ function clearNewMarker() {
       var bg = bookings.getRange(i, 1).getBackground();
       if (bg === '#fff9e6') {
         bookings.getRange(i, 1, 1, 9).setBackground(null);
-      }
-    }
-  }
-
-  // Clear Topic Selections markers
-  var selections = ss.getSheetByName('Topic Selections');
-  if (selections) {
-    selections.setTabColor('#1A2744');
-    var lastRow = selections.getLastRow();
-    for (var i = 2; i <= lastRow; i++) {
-      var bg = selections.getRange(i, 1).getBackground();
-      if (bg === '#fff9e6') {
-        selections.getRange(i, 1, 1, 8).setBackground(null);
       }
     }
   }

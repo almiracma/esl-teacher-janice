@@ -1154,7 +1154,7 @@ img {
   color: rgba(255, 255, 255, 0.8);
   font-size: 1.05rem;
   max-width: 500px;
-  margin: 0 auto 32px;
+  margin: 0 auto 44px;
 }
 
 .btn-lg {
@@ -1165,7 +1165,7 @@ img {
 .cta-card .cta-hint {
   color: rgba(255, 255, 255, 0.5);
   font-size: 1.05rem;
-  margin-top: 44px;
+  margin-top: 36px;
   max-width: none;
   white-space: nowrap;
 }

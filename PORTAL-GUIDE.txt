@@ -12,10 +12,10 @@ HOW TO ADD A NEW STUDENT:
 2. Go to the "Students" tab
 3. Add a row with these columns:
 
-   Name | Password | Age Group | Total Lessons | Course | Status
+   Name | Password | Age Group | Total Lessons | Course | Status | Lessons Used | Lessons Left
 
    Example:
-   Maria Santos | maria2026 | Adults | 8 | General English | Active
+   Maria Santos | maria2026 | Adults | 8 | General English | Active | (auto) | (auto)
 
 COLUMN GUIDE:
 - Name:          Student's full name (must match their Bookings name)
@@ -24,6 +24,16 @@ COLUMN GUIDE:
 - Total Lessons: How many lessons they bought
 - Course:        Which course they signed up for
 - Status:        Active or Inactive (inactive students can't log in)
+- Lessons Used:  AUTO-CALCULATED — counts "Completed" lessons from Bookings
+- Lessons Left:  AUTO-CALCULATED — Total Lessons minus Lessons Used
+
+NOTE: Columns G and H (Lessons Used / Lessons Left) have formulas
+that update automatically! Don't type in those cells.
+When you add a new student row, copy the formulas from the row above:
+  1. Click on cell G of the row above (one that already has a formula)
+  2. Copy it (Ctrl+C)
+  3. Click on cell G of your new row and paste (Ctrl+V)
+  4. Do the same for column H
 
 HOW TO CHANGE A PASSWORD:
 Just edit the password in the Students sheet. That's it!

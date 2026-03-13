@@ -288,3 +288,81 @@ function clearNewMarker() {
     }
   }
 }
+
+// =============================================================
+// Run this ONCE to create the Students tab with a test student.
+// Go to: Run > setupStudentsSheet
+// After running, go to the Students tab and add your real students.
+// You can delete the test student row after testing.
+// =============================================================
+function setupStudentsSheet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('Students');
+
+  if (sheet) {
+    SpreadsheetApp.getUi().alert('The "Students" tab already exists! Check your sheet tabs.');
+    return;
+  }
+
+  sheet = ss.insertSheet('Students');
+
+  // Header row (8 columns — last 2 are auto-calculated)
+  sheet.appendRow([
+    'Name', 'Password', 'Age Group', 'Total Lessons', 'Course', 'Status',
+    'Lessons Used', 'Lessons Left'
+  ]);
+  var headerRange = sheet.getRange(1, 1, 1, 8);
+  headerRange.setFontWeight('bold');
+  headerRange.setBackground('#1A2744');
+  headerRange.setFontColor('#FFFFFF');
+  headerRange.setHorizontalAlignment('center');
+
+  // Column widths
+  sheet.setColumnWidth(1, 180);  // Name
+  sheet.setColumnWidth(2, 140);  // Password
+  sheet.setColumnWidth(3, 120);  // Age Group
+  sheet.setColumnWidth(4, 120);  // Total Lessons
+  sheet.setColumnWidth(5, 180);  // Course
+  sheet.setColumnWidth(6, 100);  // Status
+  sheet.setColumnWidth(7, 110);  // Lessons Used
+  sheet.setColumnWidth(8, 110);  // Lessons Left
+
+  // Test student (delete this row after testing!)
+  // Columns A-F are manual, G-H are formulas
+  sheet.appendRow([
+    'Test Student', 'test123', 'Adults', 4, 'General English', 'Active'
+  ]);
+
+  // Add auto-calculating formulas for Lessons Used & Lessons Left
+  // Lessons Used = count of "Completed" or "Done" in Bookings where Student Name matches
+  sheet.getRange(2, 7).setFormula(
+    '=IF(A2="", "", COUNTIFS(Bookings!C:C, A2, Bookings!G:G, "Completed") + COUNTIFS(Bookings!C:C, A2, Bookings!G:G, "Done"))'
+  );
+  // Lessons Left = Total Lessons minus Lessons Used
+  sheet.getRange(2, 8).setFormula(
+    '=IF(A2="", "", MAX(0, D2 - G2))'
+  );
+
+  // Highlight test row
+  sheet.getRange(2, 1, 1, 8).setBackground('#FFF9E6');
+  sheet.getRange(2, 1, 1, 8).setFontStyle('italic');
+
+  // Style the formula columns (green for Used, navy for Left)
+  sheet.getRange(2, 7).setFontColor('#2A9D8F');
+  sheet.getRange(2, 7).setFontWeight('bold');
+  sheet.getRange(2, 8).setFontColor('#1A2744');
+  sheet.getRange(2, 8).setFontWeight('bold');
+
+  // Freeze header
+  sheet.setFrozenRows(1);
+
+  // Set tab color
+  sheet.setTabColor('#2A9D8F');
+
+  SpreadsheetApp.getUi().alert(
+    'Students tab created!\\n\\n' +
+    'A test student was added (password: test123).\\n' +
+    'Columns G & H (Lessons Used / Lessons Left) auto-calculate from Bookings!\\n' +
+    'Try logging in at your portal, then replace with real students.'
+  );
+}

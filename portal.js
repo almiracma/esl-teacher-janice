@@ -1,5 +1,5 @@
 // =============================================================
-// STUDENT PORTAL — Password, Course Rendering, Topic Selection
+// STUDENT PORTAL — Password, Course Rendering & Protection
 // =============================================================
 
 // Each age group has its own password. Teacher Janice gives the right one based on what the student bought.
@@ -9,9 +9,6 @@ var PASSWORD_MAP = {
   'f674fd7cf34e080bccea7bffc674dfb1a801b5597294727bf8cb7c32e72d86b3': 'teens',   // ESLTeens2026
   'e658cb038403021add6a87f086c54aa7b0a7ed4adcda0354eb43e9f464768caf': 'adults'   // ESLAdults2026
 };
-
-// Google Sheets endpoint (same one used for bookings & inquiries)
-var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz-jtuUOVjwxZv1UpsDMCs7E9Nk0A66UlxU9MbQBVClljIwyE98CngcdZob7LyOIrSRPQ/exec';
 
 // Current state
 var courseData = null;
@@ -91,7 +88,7 @@ async function showPortal() {
       if (group) {
         var greeting = studentName ? ('Welcome, ' + studentName.split(' ')[0] + '! ') : '';
         document.getElementById('portalSubtitle').textContent =
-          greeting + group.label + ' (' + group.ages + ') — Browse topics by level. Click "Choose" on any topic you want to study!';
+          greeting + group.label + ' (' + group.ages + ') — Browse topics by level and prepare before class!';
       }
       renderCourses();
     } catch (err) {
@@ -206,7 +203,7 @@ function renderCourses() {
 
     var activeLevel = course.levels.find(function(l) { return l.id === activeLevels[course.id]; });
     if (activeLevel && activeLevel.topics.length > 0) {
-      topicList.innerHTML = renderTopics(activeLevel.topics, course.id, activeLevel.id);
+      topicList.innerHTML = renderTopics(activeLevel.topics);
     } else {
       topicList.innerHTML = '<div class="coming-soon">Topics coming soon! Check back later.</div>';
     }
@@ -221,13 +218,9 @@ function switchLevel(courseId, levelId) {
   renderCourses();
 }
 
-function renderTopics(topics, courseId, levelId) {
+function renderTopics(topics) {
   var html = '';
   topics.forEach(function(topic, index) {
-    // Build a unique key for this topic selection
-    var topicKey = activeAgeGroup + '|' + courseId + '|' + levelId + '|' + topic.title;
-    var isSelected = isTopicSelected(topicKey);
-
     html += '<div class="topic-item">';
     html += '  <div class="topic-number">' + (index + 1) + '</div>';
     html += '  <div class="topic-info">';
@@ -242,17 +235,6 @@ function renderTopics(topics, courseId, levelId) {
       html += '    </div>';
     }
 
-    // Choose Topic button
-    if (isSelected) {
-      html += '    <button class="choose-btn chosen" disabled>';
-      html += '      <span class="choose-icon">&#10003;</span> Selected';
-      html += '    </button>';
-    } else {
-      html += '    <button class="choose-btn" onclick="chooseTopic(\'' + escapeAttr(topicKey) + '\', \'' + escapeAttr(topic.title) + '\', \'' + escapeAttr(courseId) + '\', \'' + escapeAttr(levelId) + '\')">';
-      html += '      <span class="choose-icon">&#10010;</span> Choose This Topic';
-      html += '    </button>';
-    }
-
     html += '  </div>';
     html += '</div>';
   });
@@ -263,61 +245,6 @@ function escapeHtml(str) {
   var div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
-}
-
-function escapeAttr(str) {
-  return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-}
-
-// =============================================================
-// TOPIC SELECTION — Save to Google Sheets
-// =============================================================
-
-// Check if a topic has already been selected (localStorage)
-function isTopicSelected(topicKey) {
-  var key = 'esl_topic_' + (studentName || '') + '_' + topicKey;
-  return localStorage.getItem(key) === '1';
-}
-
-// Mark a topic as selected and send to Google Sheets
-function chooseTopic(topicKey, topicTitle, courseId, levelId) {
-  var localKey = 'esl_topic_' + (studentName || '') + '_' + topicKey;
-
-  // Already selected? Skip
-  if (localStorage.getItem(localKey) === '1') return;
-
-  // Save locally
-  localStorage.setItem(localKey, '1');
-
-  // Get course title from courseData
-  var group = courseData.ageGroups.find(function(g) { return g.id === activeAgeGroup; });
-  var course = group ? group.courses.find(function(c) { return c.id === courseId; }) : null;
-  var courseTitle = course ? course.title : courseId;
-  var level = course ? course.levels.find(function(l) { return l.id === levelId; }) : null;
-  var levelLabel = level ? level.label : levelId;
-  var groupLabel = group ? (group.label + ' (' + group.ages + ')') : activeAgeGroup;
-
-  // Send to Google Sheets
-  if (SHEETS_URL) {
-    fetch(SHEETS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        formType: 'TopicSelection',
-        studentName: studentName,
-        ageGroup: groupLabel,
-        course: courseTitle,
-        level: levelLabel,
-        topic: topicTitle
-      })
-    }).catch(function(err) {
-      console.log('Topic selection save (non-blocking):', err);
-    });
-  }
-
-  // Re-render to show "Selected" state
-  renderCourses();
 }
 
 // =============================================================

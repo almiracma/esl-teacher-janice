@@ -365,46 +365,6 @@
   font-size: 0.85rem;
 }
 
-/* ---- Choose Topic Button ---- */
-.choose-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 10px;
-  padding: 8px 18px;
-  border-radius: 50px;
-  border: 2px solid var(--teal);
-  background: var(--white);
-  color: var(--teal);
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  transition: all 0.3s ease;
-}
-
-.choose-btn:hover {
-  background: var(--teal);
-  color: var(--white);
-}
-
-.choose-btn .choose-icon {
-  font-size: 0.85rem;
-  font-weight: 700;
-}
-
-.choose-btn.chosen {
-  background: var(--teal);
-  border-color: var(--teal);
-  color: var(--white);
-  cursor: default;
-  opacity: 0.85;
-}
-
-.choose-btn.chosen .choose-icon {
-  font-size: 0.9rem;
-}
-
 /* ---- Coming Soon ---- */
 .coming-soon {
   padding: 40px 28px;

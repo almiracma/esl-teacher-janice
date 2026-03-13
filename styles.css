@@ -1170,6 +1170,12 @@ img {
   white-space: nowrap;
 }
 
+@media (max-width: 768px) {
+  .cta-card .cta-hint {
+    white-space: normal;
+  }
+}
+
 /* How It Works */
 .how-it-works {
   margin-bottom: 56px;

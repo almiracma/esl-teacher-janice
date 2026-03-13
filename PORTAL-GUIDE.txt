@@ -106,6 +106,23 @@ After editing course-data.json (or adding PDFs):
 Your changes will be live in about 1-2 minutes!
 
 
+HOW TOPIC SELECTIONS WORK
+==========================
+When a student logs in with their name + password, they see
+a "Choose This Topic" button on every topic.
+
+When they click it:
+1. The button turns teal and says "Selected ✓"
+2. The selection is saved to your Google Sheets (Topic Selections tab)
+3. You'll see: Date | Student Name | Age Group | Course | Level | Topic | Status | Notes
+
+The "Topic Selections" tab turns RED when new selections arrive.
+Use the Status column to track progress (e.g., "Scheduled", "Completed").
+
+Students can only select each topic once (saved in their browser).
+If they clear their browser data, they can select again.
+
+
 FOLDER STRUCTURE
 ================
 materials/

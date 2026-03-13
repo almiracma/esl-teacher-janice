@@ -10,6 +10,8 @@ function doPost(e) {
 
     if (data.formType === 'Booking') {
       handleBooking(ss, data);
+    } else if (data.formType === 'TopicSelection') {
+      handleTopicSelection(ss, data);
     } else {
       handleInquiry(ss, data);
     }
@@ -157,6 +159,70 @@ function handleInquiry(ss, data) {
 }
 
 // =============================================================
+// TOPIC SELECTIONS — From the Student Portal
+// When a student clicks "Choose This Topic" in the portal
+// Columns: Date | Student Name | Age Group | Course | Level | Topic | Status | Notes
+// =============================================================
+function handleTopicSelection(ss, data) {
+  var sheetName = 'Topic Selections';
+  var sheet = ss.getSheetByName(sheetName);
+
+  // Create the sheet if it doesn't exist
+  if (!sheet) {
+    sheet = ss.insertSheet(sheetName);
+    sheet.appendRow([
+      'Date', 'Student Name', 'Age Group', 'Course',
+      'Level', 'Topic', 'Status', 'Notes'
+    ]);
+    // Style the header row
+    var headerRange = sheet.getRange(1, 1, 1, 8);
+    headerRange.setFontWeight('bold');
+    headerRange.setBackground('#1A2744');
+    headerRange.setFontColor('#FFFFFF');
+    headerRange.setHorizontalAlignment('center');
+    // Set column widths
+    sheet.setColumnWidth(1, 120);  // Date
+    sheet.setColumnWidth(2, 160);  // Student Name
+    sheet.setColumnWidth(3, 140);  // Age Group
+    sheet.setColumnWidth(4, 160);  // Course
+    sheet.setColumnWidth(5, 120);  // Level
+    sheet.setColumnWidth(6, 220);  // Topic
+    sheet.setColumnWidth(7, 100);  // Status
+    sheet.setColumnWidth(8, 200);  // Notes
+    // Freeze header row
+    sheet.setFrozenRows(1);
+  }
+
+  // Append the topic selection
+  sheet.appendRow([
+    new Date(),
+    data.studentName || '',
+    data.ageGroup || '',
+    data.course || '',
+    data.level || '',
+    data.topic || '',
+    'New',
+    ''
+  ]);
+
+  var lastRow = sheet.getLastRow();
+
+  // Format date column
+  sheet.getRange(lastRow, 1).setNumberFormat('yyyy-mm-dd h:mm AM/PM');
+
+  // Style "New" status in teal
+  var statusCell = sheet.getRange(lastRow, 7);
+  statusCell.setFontColor('#2A9D8F');
+  statusCell.setFontWeight('bold');
+
+  // Highlight new row with light yellow
+  sheet.getRange(lastRow, 1, 1, 8).setBackground('#FFF9E6');
+
+  // Mark the tab RED so Teacher Janice sees new selections
+  sheet.setTabColor('#FF4444');
+}
+
+// =============================================================
 // Run this manually to clear the red tab markers after you've
 // reviewed new bookings/inquiries. Go to: Run > clearNewMarker
 // =============================================================
@@ -185,6 +251,19 @@ function clearNewMarker() {
       var bg = bookings.getRange(i, 1).getBackground();
       if (bg === '#fff9e6') {
         bookings.getRange(i, 1, 1, 9).setBackground(null);
+      }
+    }
+  }
+
+  // Clear Topic Selections markers
+  var selections = ss.getSheetByName('Topic Selections');
+  if (selections) {
+    selections.setTabColor('#1A2744');
+    var lastRow = selections.getLastRow();
+    for (var i = 2; i <= lastRow; i++) {
+      var bg = selections.getRange(i, 1).getBackground();
+      if (bg === '#fff9e6') {
+        selections.getRange(i, 1, 1, 8).setBackground(null);
       }
     }
   }

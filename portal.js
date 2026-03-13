@@ -1,5 +1,5 @@
 // =============================================================
-// STUDENT PORTAL — Password, Course Rendering & Protection
+// STUDENT PORTAL — Password, Course Rendering, Topic Selection
 // =============================================================
 
 // Each age group has its own password. Teacher Janice gives the right one based on what the student bought.
@@ -10,10 +10,14 @@ var PASSWORD_MAP = {
   'e658cb038403021add6a87f086c54aa7b0a7ed4adcda0354eb43e9f464768caf': 'adults'   // ESLAdults2026
 };
 
+// Google Sheets endpoint (same one used for bookings & inquiries)
+var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz-jtuUOVjwxZv1UpsDMCs7E9Nk0A66UlxU9MbQBVClljIwyE98CngcdZob7LyOIrSRPQ/exec';
+
 // Current state
 var courseData = null;
 var activeAgeGroup = null;
 var activeLevels = {}; // { courseId: levelId }
+var studentName = '';
 
 // =============================================================
 // PASSWORD
@@ -27,15 +31,24 @@ async function hashPassword(password) {
 }
 
 async function checkPassword() {
-  var input = document.getElementById('portalPassword').value.trim();
-  if (!input) return;
+  var nameInput = document.getElementById('portalStudentName').value.trim();
+  var passInput = document.getElementById('portalPassword').value.trim();
 
-  var hash = await hashPassword(input);
+  if (!nameInput || !passInput) {
+    var errorEl = document.getElementById('portalError');
+    errorEl.textContent = 'Please enter your name and password.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  var hash = await hashPassword(passInput);
   var group = PASSWORD_MAP[hash];
   if (group) {
     sessionStorage.setItem('portal_auth', hash);
     sessionStorage.setItem('portal_group', group);
+    sessionStorage.setItem('portal_name', nameInput);
     activeAgeGroup = group;
+    studentName = nameInput;
     document.getElementById('portalError').style.display = 'none';
     showPortal();
   } else {
@@ -50,10 +63,13 @@ async function checkPassword() {
 function logout() {
   sessionStorage.removeItem('portal_auth');
   sessionStorage.removeItem('portal_group');
+  sessionStorage.removeItem('portal_name');
   activeAgeGroup = null;
+  studentName = '';
   courseData = null;
   document.getElementById('portalContent').style.display = 'none';
   document.getElementById('passwordGate').style.display = 'flex';
+  document.getElementById('portalStudentName').value = '';
   document.getElementById('portalPassword').value = '';
 }
 
@@ -70,11 +86,12 @@ async function showPortal() {
       courseData = await response.json();
       // Hide age group tabs — students only see their own group
       document.getElementById('ageGroupTabs').style.display = 'none';
-      // Show welcome message with the group name
+      // Show welcome message with the group name and student name
       var group = courseData.ageGroups.find(function(g) { return g.id === activeAgeGroup; });
       if (group) {
+        var greeting = studentName ? ('Welcome, ' + studentName.split(' ')[0] + '! ') : '';
         document.getElementById('portalSubtitle').textContent =
-          group.label + ' (' + group.ages + ') — Browse topics by level and prepare before class!';
+          greeting + group.label + ' (' + group.ages + ') — Browse topics by level. Click "Choose" on any topic you want to study!';
       }
       renderCourses();
     } catch (err) {
@@ -88,8 +105,10 @@ async function showPortal() {
 (function() {
   var stored = sessionStorage.getItem('portal_auth');
   var storedGroup = sessionStorage.getItem('portal_group');
+  var storedName = sessionStorage.getItem('portal_name');
   if (stored && PASSWORD_MAP[stored] && storedGroup) {
     activeAgeGroup = storedGroup;
+    studentName = storedName || '';
     showPortal();
   }
 
@@ -99,6 +118,16 @@ async function showPortal() {
     pwInput.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         checkPassword();
+      }
+    });
+  }
+
+  // Enter key on name input moves to password
+  var nameInput = document.getElementById('portalStudentName');
+  if (nameInput) {
+    nameInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        document.getElementById('portalPassword').focus();
       }
     });
   }
@@ -177,7 +206,7 @@ function renderCourses() {
 
     var activeLevel = course.levels.find(function(l) { return l.id === activeLevels[course.id]; });
     if (activeLevel && activeLevel.topics.length > 0) {
-      topicList.innerHTML = renderTopics(activeLevel.topics);
+      topicList.innerHTML = renderTopics(activeLevel.topics, course.id, activeLevel.id);
     } else {
       topicList.innerHTML = '<div class="coming-soon">Topics coming soon! Check back later.</div>';
     }
@@ -192,9 +221,13 @@ function switchLevel(courseId, levelId) {
   renderCourses();
 }
 
-function renderTopics(topics) {
+function renderTopics(topics, courseId, levelId) {
   var html = '';
   topics.forEach(function(topic, index) {
+    // Build a unique key for this topic selection
+    var topicKey = activeAgeGroup + '|' + courseId + '|' + levelId + '|' + topic.title;
+    var isSelected = isTopicSelected(topicKey);
+
     html += '<div class="topic-item">';
     html += '  <div class="topic-number">' + (index + 1) + '</div>';
     html += '  <div class="topic-info">';
@@ -209,6 +242,17 @@ function renderTopics(topics) {
       html += '    </div>';
     }
 
+    // Choose Topic button
+    if (isSelected) {
+      html += '    <button class="choose-btn chosen" disabled>';
+      html += '      <span class="choose-icon">&#10003;</span> Selected';
+      html += '    </button>';
+    } else {
+      html += '    <button class="choose-btn" onclick="chooseTopic(\'' + escapeAttr(topicKey) + '\', \'' + escapeAttr(topic.title) + '\', \'' + escapeAttr(courseId) + '\', \'' + escapeAttr(levelId) + '\')">';
+      html += '      <span class="choose-icon">&#10010;</span> Choose This Topic';
+      html += '    </button>';
+    }
+
     html += '  </div>';
     html += '</div>';
   });
@@ -219,6 +263,61 @@ function escapeHtml(str) {
   var div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
+}
+
+function escapeAttr(str) {
+  return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+// =============================================================
+// TOPIC SELECTION — Save to Google Sheets
+// =============================================================
+
+// Check if a topic has already been selected (localStorage)
+function isTopicSelected(topicKey) {
+  var key = 'esl_topic_' + (studentName || '') + '_' + topicKey;
+  return localStorage.getItem(key) === '1';
+}
+
+// Mark a topic as selected and send to Google Sheets
+function chooseTopic(topicKey, topicTitle, courseId, levelId) {
+  var localKey = 'esl_topic_' + (studentName || '') + '_' + topicKey;
+
+  // Already selected? Skip
+  if (localStorage.getItem(localKey) === '1') return;
+
+  // Save locally
+  localStorage.setItem(localKey, '1');
+
+  // Get course title from courseData
+  var group = courseData.ageGroups.find(function(g) { return g.id === activeAgeGroup; });
+  var course = group ? group.courses.find(function(c) { return c.id === courseId; }) : null;
+  var courseTitle = course ? course.title : courseId;
+  var level = course ? course.levels.find(function(l) { return l.id === levelId; }) : null;
+  var levelLabel = level ? level.label : levelId;
+  var groupLabel = group ? (group.label + ' (' + group.ages + ')') : activeAgeGroup;
+
+  // Send to Google Sheets
+  if (SHEETS_URL) {
+    fetch(SHEETS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        formType: 'TopicSelection',
+        studentName: studentName,
+        ageGroup: groupLabel,
+        course: courseTitle,
+        level: levelLabel,
+        topic: topicTitle
+      })
+    }).catch(function(err) {
+      console.log('Topic selection save (non-blocking):', err);
+    });
+  }
+
+  // Re-render to show "Selected" state
+  renderCourses();
 }
 
 // =============================================================

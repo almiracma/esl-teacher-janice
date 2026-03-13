@@ -2,13 +2,17 @@
 // STUDENT PORTAL — Password, Course Rendering & Protection
 // =============================================================
 
-// SHA-256 hash of the portal password (ESLJanice2026)
+// Each age group has its own password. Teacher Janice gives the right one based on what the student bought.
 // To change: generate a new hash at https://emn178.github.io/online-tools/sha256.html
-var CORRECT_HASH = 'b6fde9c17cdb21dafef569e31e3b6c9e00e074c440410871b0a8d693184c9499';
+var PASSWORD_MAP = {
+  'acc4e8c0459a9e6aa2bf00a5022b481702e475644a7a245844b3a08d69d1eb50': 'kids',    // ESLKids2026
+  'f674fd7cf34e080bccea7bffc674dfb1a801b5597294727bf8cb7c32e72d86b3': 'teens',   // ESLTeens2026
+  'e658cb038403021add6a87f086c54aa7b0a7ed4adcda0354eb43e9f464768caf': 'adults'   // ESLAdults2026
+};
 
 // Current state
 var courseData = null;
-var activeAgeGroup = 'kids';
+var activeAgeGroup = null;
 var activeLevels = {}; // { courseId: levelId }
 
 // =============================================================
@@ -27,8 +31,11 @@ async function checkPassword() {
   if (!input) return;
 
   var hash = await hashPassword(input);
-  if (hash === CORRECT_HASH) {
+  var group = PASSWORD_MAP[hash];
+  if (group) {
     sessionStorage.setItem('portal_auth', hash);
+    sessionStorage.setItem('portal_group', group);
+    activeAgeGroup = group;
     document.getElementById('portalError').style.display = 'none';
     showPortal();
   } else {
@@ -42,6 +49,9 @@ async function checkPassword() {
 
 function logout() {
   sessionStorage.removeItem('portal_auth');
+  sessionStorage.removeItem('portal_group');
+  activeAgeGroup = null;
+  courseData = null;
   document.getElementById('portalContent').style.display = 'none';
   document.getElementById('passwordGate').style.display = 'flex';
   document.getElementById('portalPassword').value = '';
@@ -58,8 +68,15 @@ async function showPortal() {
     try {
       var response = await fetch('course-data.json?v=' + Date.now());
       courseData = await response.json();
-      renderAgeGroupTabs();
-      switchAgeGroup('kids');
+      // Hide age group tabs — students only see their own group
+      document.getElementById('ageGroupTabs').style.display = 'none';
+      // Show welcome message with the group name
+      var group = courseData.ageGroups.find(function(g) { return g.id === activeAgeGroup; });
+      if (group) {
+        document.getElementById('portalSubtitle').textContent =
+          group.label + ' (' + group.ages + ') — Browse topics by level and prepare before class!';
+      }
+      renderCourses();
     } catch (err) {
       document.getElementById('courseContainer').innerHTML =
         '<div class="coming-soon">Course content could not be loaded. Please try again later or contact Teacher Janice.</div>';
@@ -70,7 +87,9 @@ async function showPortal() {
 // Check if already authenticated on page load
 (function() {
   var stored = sessionStorage.getItem('portal_auth');
-  if (stored === CORRECT_HASH) {
+  var storedGroup = sessionStorage.getItem('portal_group');
+  if (stored && PASSWORD_MAP[stored] && storedGroup) {
+    activeAgeGroup = storedGroup;
     showPortal();
   }
 

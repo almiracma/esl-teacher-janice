@@ -2,18 +2,23 @@
 STUDENT PORTAL — How to Manage Your Content
 =============================================
 
-PORTAL PASSWORD
-===============
-The current password is: ESLJanice2026
-Give this to students after they pay for a course.
+PORTAL PASSWORDS
+=================
+Each age group has its own password. Students only see
+courses for their age group. Give the right one after they pay:
 
-To change the password:
+  Kids (4-12):   ESLKids2026
+  Teens (13-17): ESLTeens2026
+  Adults (18+):  ESLAdults2026
+
+To change a password:
 1. Go to https://emn178.github.io/online-tools/sha256.html
 2. Type your new password and click "Hash"
 3. Copy the hash result
 4. Open portal.js
-5. Replace the long code after CORRECT_HASH = with your new hash
-6. Save, commit, and push to GitHub
+5. Find the PASSWORD_MAP section at the top
+6. Replace the old hash with the new one (keep the age group name)
+7. Save, commit, and push to GitHub
 
 
 HOW TO ADD A NEW TOPIC
